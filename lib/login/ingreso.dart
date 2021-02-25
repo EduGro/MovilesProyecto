@@ -1,4 +1,4 @@
-import 'package:proyectoMoviles/home/home.dart';
+import 'package:proyectoMoviles/home/pantalla_principal.dart';
 import 'package:proyectoMoviles/login/registro.dart';
 import 'package:proyectoMoviles/utils/constants.dart';
 import 'package:flutter/gestures.dart';
@@ -161,9 +161,7 @@ class _IngresoState extends State<Ingreso> {
                       if (probablyPass >= 0) {
                         Navigator.of(context).push(
                           MaterialPageRoute(
-                            builder: (context) => Home(
-                                title: APP_TITLE,
-                                usuario: _listElements[probablyPass]),
+                            builder: (context) => PantallaPrincipal(),
                           ),
                         );
                       }

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:proyectoMoviles/profile.dart';
+import 'package:proyectoMoviles/utils/constants.dart';
 
 class Home extends StatefulWidget {
   final String title;
@@ -28,19 +30,29 @@ class _HomeState extends State<Home> {
       key: _scaffoldKey,
       appBar: AppBar(
         title: Text(widget.title),
-        actions: <Widget>[
-          /*IconButton(
-            icon: Icon(Icons.person),
-            onPressed: () {
-              Drawer(
-                child: Profile(
-                  title: widget.title,
-                  usuario: widget.usuario,
-                ),
-              );
-            },
-          ),*/
-        ],
+      ),
+      body: Align(
+        alignment: Alignment.center,
+        child: Row(
+          mainAxisSize: MainAxisSize.max,
+          children: <Widget>[
+            Expanded(
+              child: RaisedButton(
+                child: Text("Usuario"),
+                onPressed: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => Profile(
+                        title: widget.title,
+                        usuario: widget.usuario,
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

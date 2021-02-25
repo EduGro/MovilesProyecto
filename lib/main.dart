@@ -1,17 +1,21 @@
+import 'package:proyectoMoviles/login/ingreso.dart';
 import 'package:flutter/material.dart';
-import 'pantalla_principal.dart';
- 
+import 'package:proyectoMoviles/utils/constants.dart';
+
 void main() => runApp(MyApp());
- 
+
 class MyApp extends StatelessWidget {
+  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Material App',
+      title: APP_TITLE,
       theme: ThemeData(
-        primarySwatch: Colors.deepPurple,
+        //primaryColor: PRIMARY_COLOR,
+        primarySwatch: PRIMARY_COLOR,
+        fontFamily: 'Akzidenz-Grotesk BQ',
       ),
-      home: PantallaPrincipal(),
+      home: Ingreso(title: APP_TITLE),
     );
   }
 }

@@ -161,7 +161,10 @@ class _IngresoState extends State<Ingreso> {
                       if (probablyPass >= 0) {
                         Navigator.of(context).push(
                           MaterialPageRoute(
-                            builder: (context) => PantallaPrincipal(),
+                            builder: (context) => PantallaPrincipal(
+                              title: widget.title,
+                              usuario: _listElements[probablyPass],
+                            ),
                           ),
                         );
                       }

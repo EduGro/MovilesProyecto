@@ -11,14 +11,26 @@ class Profile extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(PROFILE_NAME),
+        /*leading: IconButton(
+          icon: Icon(Icons.person),
+          onPressed: () {},
+        ),*/
+        centerTitle: true,
+        title: Text(usuario.entries.first.value),
+        actions: <Widget>[
+          IconButton(
+            icon: const Icon(Icons.settings),
+            tooltip: 'Show Snackbar',
+            onPressed: () {},
+          ),
+        ],
       ),
       body: Padding(
         padding: EdgeInsets.all(24.0),
         child: Stack(
           children: [
             Column(
-              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget>[
                 Container(
                   height: 150,
@@ -31,21 +43,51 @@ class Profile extends StatelessWidget {
                   ),
                 ),
                 SizedBox(
-                  height: 16,
+                  height: 30,
                 ),
                 Text(
                   usuario["nombre"],
                   style: Theme.of(context)
                       .textTheme
-                      .headline4
+                      .headline3
                       .copyWith(color: Colors.black),
+                  textAlign: TextAlign.center,
                 ),
                 SizedBox(
-                  height: 8,
+                  height: 25,
                 ),
-                Text(usuario["email"]),
+                Text(
+                  usuario["email"],
+                  style: Theme.of(context)
+                      .textTheme
+                      .headline5
+                      .copyWith(color: Colors.black),
+                  textAlign: TextAlign.center,
+                ),
                 SizedBox(
-                  height: 16,
+                  height: 40,
+                ),
+                Text(
+                  "Casa",
+                  style: Theme.of(context)
+                      .textTheme
+                      .headline5
+                      .copyWith(color: Colors.black),
+                  textAlign: TextAlign.center,
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                Text(
+                  "Varita",
+                  style: Theme.of(context)
+                      .textTheme
+                      .headline5
+                      .copyWith(color: Colors.black),
+                  textAlign: TextAlign.center,
+                ),
+                SizedBox(
+                  height: 20,
                 ),
               ],
             ),

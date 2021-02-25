@@ -9,7 +9,7 @@ const String PROFILE_PICTURE =
     "https://dkpp.go.id/wp-content/uploads/2018/10/photo.jpg";
 
 // app
-const _redPrimaryValue = 0xFFD21616;
+const _redPrimaryValue = 0xFF800000;
 const Color PRIMARY_COLOR = const MaterialColor(
   _redPrimaryValue,
   const <int, Color>{

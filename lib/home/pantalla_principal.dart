@@ -33,27 +33,48 @@ class _PantallaPrincipalState extends State<PantallaPrincipal> {
         ]
       ),
       endDrawer: Drawer(
-        child: ListView(
-          children: <Widget>[
-            Card(
-              child: ListTile(
-                  title: Text("Buscar amigos"),
+        child: Padding(
+          padding: EdgeInsets.only(top: 25.0),
+          child: ListView(
+            children: <Widget>[
+              Card(
+                color: Colors.purple,
+                child: ListTile(
+                  title: Text("Buscar amigos",
+                    style: TextStyle(
+                      fontSize: 15,
+                      color: Colors.white,
+                    ),
+                  ),
                   onTap: (){},
                 ),
-            ),
-            Card(
-              child: ListTile(
-                  title: Text("Ir a casa"),
+              ),
+              Card(
+                color: Colors.indigo,
+                child: ListTile(
+                  title: Text("Ir a casa",
+                    style: TextStyle(
+                      fontSize: 15,
+                      color: Colors.white,
+                    ),
+                  ),
                   onTap: (){},
                 ),
-            ),
-            Card(
-              child: ListTile(
-                  title: Text("Ver leaderboards"),
+              ),
+              Card(
+                color: Colors.deepPurple,
+                child: ListTile(
+                  title: Text("Ver leaderboards",
+                    style: TextStyle(
+                      fontSize: 15,
+                      color: Colors.white,
+                    ),
+                  ),
                   onTap: (){},
                 ),
-            ),
-          ],
+              ),
+            ],
+          ),
         ),
       ),
       body: ListView(
@@ -146,7 +167,7 @@ class _PantallaPrincipalState extends State<PantallaPrincipal> {
             onTap: _openFriends,
             child: Container(
               padding: EdgeInsets.all(12.0),
-              height: MediaQuery.of(context).size.height * 0.2,
+              height: MediaQuery.of(context).size.height/8,
               child: Card(
                 color: Colors.purple[400],
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),

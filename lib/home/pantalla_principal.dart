@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:proyectoMoviles/profile.dart';
+import 'package:proyectoMoviles/others/friends_page.dart';
+import 'package:proyectoMoviles/utils/temp_friend_list.dart';
 
 class PantallaPrincipal extends StatefulWidget {
   final String title;
@@ -16,6 +18,7 @@ class _PantallaPrincipalState extends State<PantallaPrincipal> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.indigo[700],
       key: _scaffoldKey,
       appBar: AppBar(
           leading: IconButton(
@@ -42,50 +45,53 @@ class _PantallaPrincipalState extends State<PantallaPrincipal> {
             ),
           ]),
       endDrawer: Drawer(
-        child: Padding(
-          padding: EdgeInsets.only(top: 25.0),
-          child: ListView(
-            children: <Widget>[
-              Card(
-                color: Colors.purple,
-                child: ListTile(
-                  title: Text(
-                    "Buscar amigos",
-                    style: TextStyle(
-                      fontSize: 15,
-                      color: Colors.white,
+        child: Container(
+          color: Colors.indigo[900],
+          child: Padding(
+            padding: EdgeInsets.only(top: 25.0),
+            child: ListView(
+              children: <Widget>[
+                Card(
+                  color: Colors.purple,
+                  child: ListTile(
+                    title: Text(
+                      "Buscar amigos",
+                      style: TextStyle(
+                        fontSize: 15,
+                        color: Colors.white,
+                      ),
                     ),
+                    onTap: () {},
                   ),
-                  onTap: () {},
                 ),
-              ),
-              Card(
-                color: Colors.indigo,
-                child: ListTile(
-                  title: Text(
-                    "Ir a casa",
-                    style: TextStyle(
-                      fontSize: 15,
-                      color: Colors.white,
+                Card(
+                  color: Colors.indigo,
+                  child: ListTile(
+                    title: Text(
+                      "Ir a casa",
+                      style: TextStyle(
+                        fontSize: 15,
+                        color: Colors.white,
+                      ),
                     ),
+                    onTap: () {},
                   ),
-                  onTap: () {},
                 ),
-              ),
-              Card(
-                color: Colors.deepPurple,
-                child: ListTile(
-                  title: Text(
-                    "Ver leaderboards",
-                    style: TextStyle(
-                      fontSize: 15,
-                      color: Colors.white,
+                Card(
+                  color: Colors.deepPurple,
+                  child: ListTile(
+                    title: Text(
+                      "Ver leaderboards",
+                      style: TextStyle(
+                        fontSize: 15,
+                        color: Colors.white,
+                      ),
                     ),
+                    onTap: () {},
                   ),
-                  onTap: () {},
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
@@ -221,6 +227,14 @@ class _PantallaPrincipalState extends State<PantallaPrincipal> {
     // TODO
   }
   void _openFriends() {
-    // TODO
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) {
+          return FriendsPage(
+            friendsList: FriendRepository.loadFriends()
+          );
+        },
+      ),
+    );
   }
 }

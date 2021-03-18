@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:proyectoMoviles/profile.dart';
 import 'package:proyectoMoviles/others/friends_page.dart';
 import 'package:proyectoMoviles/utils/temp_friend_list.dart';
+import '../adventure/adventure.dart';
 
 class PantallaPrincipal extends StatefulWidget {
   final String title;
@@ -221,8 +222,15 @@ class _PantallaPrincipalState extends State<PantallaPrincipal> {
     // TODO
   }
   void _openAdventure() {
-    // TODO
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) {
+          return Adventure();
+        },
+      ),
+    );
   }
+
   void _openVS() {
     // TODO
   }
@@ -230,9 +238,7 @@ class _PantallaPrincipalState extends State<PantallaPrincipal> {
     Navigator.of(context).push(
       MaterialPageRoute(
         builder: (context) {
-          return FriendsPage(
-            friendsList: FriendRepository.loadFriends()
-          );
+          return FriendsPage(friendsList: FriendRepository.loadFriends());
         },
       ),
     );

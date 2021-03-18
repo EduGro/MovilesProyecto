@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:proyectoMoviles/login/ingreso.dart';
 import 'package:proyectoMoviles/utils/constants.dart';
 
@@ -28,9 +29,7 @@ class Profile extends StatelessWidget {
       body: Container(
         decoration: BoxDecoration(
           image: DecorationImage(
-            image: NetworkImage(
-              "https://lh3.googleusercontent.com/proxy/hZsYtxqQ0fNu7r3aOF89qtw8FAwNCrnZeZBQBy7ko4ZDO68XevD05M5E9di5bXBNmTKEE5aRk3qZ28DZYF8O3sbP9UYJD_qPBnA",
-            ),
+            image: AssetImage('assets/BkgnGryffindorUser.jpg'),
             fit: BoxFit.cover,
           ),
         ),
@@ -106,8 +105,8 @@ class Profile extends StatelessWidget {
                         .copyWith(color: Colors.white),
                     textAlign: TextAlign.center,
                   ),
-                  Image.network(
-                    'https://lh3.googleusercontent.com/proxy/lpxLQWBP6VavVyQuucv8QCY71ASJrWOLLlqg0vB24uaaoAG9s7chwzkCx_FlvvErPYt5VMhj28Ejs77FZpeTN94-VpJB8J_eoSI9QHKUElTHCShQYQ',
+                  Image(
+                    image: AssetImage('assets/PropWand.png'),
                   ),
                   SizedBox(
                     height: 20,

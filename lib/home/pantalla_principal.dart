@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:proyectoMoviles/profile.dart';
 import 'package:proyectoMoviles/others/friends_page.dart';
+import 'package:proyectoMoviles/others/house_page.dart';
 import 'package:proyectoMoviles/utils/temp_friend_list.dart';
+import 'package:proyectoMoviles/utils/temp_topics.dart';
 import '../adventure/adventure.dart';
 
 class PantallaPrincipal extends StatefulWidget {
@@ -44,7 +46,8 @@ class _PantallaPrincipalState extends State<PantallaPrincipal> {
                 _scaffoldKey.currentState.openEndDrawer();
               },
             ),
-          ]),
+          ]
+        ),
       endDrawer: Drawer(
         child: Container(
           color: Colors.indigo[900],
@@ -75,7 +78,16 @@ class _PantallaPrincipalState extends State<PantallaPrincipal> {
                         color: Colors.white,
                       ),
                     ),
-                    onTap: () {},
+                    onTap: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) {
+                            return HousePage(
+                                topicList: TopicRepository.loadTopic());
+                          },
+                        ),
+                      );
+                    },
                   ),
                 ),
                 Card(

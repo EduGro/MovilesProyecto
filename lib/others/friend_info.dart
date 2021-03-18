@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:proyectoMoviles/others/friends_page.dart';
 import 'package:proyectoMoviles/utils/item_friends.dart';
 
 class friendInfo extends StatefulWidget {

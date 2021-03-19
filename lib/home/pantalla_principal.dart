@@ -6,6 +6,7 @@ import 'package:proyectoMoviles/others/house_page.dart';
 import 'package:proyectoMoviles/utils/temp_friend_list.dart';
 import 'package:proyectoMoviles/utils/temp_topics.dart';
 import '../adventure/adventure.dart';
+import '../quiz/question_page.dart';
 
 class PantallaPrincipal extends StatefulWidget {
   final String title;
@@ -234,8 +235,15 @@ class _PantallaPrincipalState extends State<PantallaPrincipal> {
   }
 
   void _openQuiz() {
-    // TODO
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) {
+          return QuizPage();
+        },
+      ),
+    );
   }
+
   void _openAdventure() {
     Navigator.of(context).push(
       MaterialPageRoute(
@@ -249,6 +257,7 @@ class _PantallaPrincipalState extends State<PantallaPrincipal> {
   void _openVS() {
     // TODO
   }
+
   void _openFriends() {
     Navigator.of(context).push(
       MaterialPageRoute(

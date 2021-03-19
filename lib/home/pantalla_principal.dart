@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:proyectoMoviles/Leaderboards/leaderboard.dart';
 import 'package:proyectoMoviles/profile.dart';
 import 'package:proyectoMoviles/others/friends_page.dart';
 import 'package:proyectoMoviles/others/house_page.dart';
@@ -100,7 +101,9 @@ class _PantallaPrincipalState extends State<PantallaPrincipal> {
                         color: Colors.white,
                       ),
                     ),
-                    onTap: () {},
+                    onTap: () {
+                      _openLeaderboards();
+                    },
                   ),
                 ),
               ],
@@ -251,6 +254,16 @@ class _PantallaPrincipalState extends State<PantallaPrincipal> {
       MaterialPageRoute(
         builder: (context) {
           return FriendsPage(friendsList: FriendRepository.loadFriends());
+        },
+      ),
+    );
+  }
+
+  void _openLeaderboards() {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) {
+          return Leaderboard();
         },
       ),
     );

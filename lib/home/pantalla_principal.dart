@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:proyectoMoviles/Leaderboards/leaderboard.dart';
+import 'package:proyectoMoviles/others/leaderboard_page.dart';
 import 'package:proyectoMoviles/profile.dart';
 import 'package:proyectoMoviles/others/friends_page.dart';
 import 'package:proyectoMoviles/others/house_page.dart';
 import 'package:proyectoMoviles/utils/temp_friend_list.dart';
+import 'package:proyectoMoviles/utils/temp_leaderboard.dart';
 import 'package:proyectoMoviles/utils/temp_topics.dart';
 import '../adventure/adventure.dart';
 import '../quiz/question_page.dart';
@@ -48,8 +49,7 @@ class _PantallaPrincipalState extends State<PantallaPrincipal> {
                 _scaffoldKey.currentState.openEndDrawer();
               },
             ),
-          ]
-        ),
+          ]),
       endDrawer: Drawer(
         child: Container(
           color: Colors.indigo[900],
@@ -272,7 +272,8 @@ class _PantallaPrincipalState extends State<PantallaPrincipal> {
     Navigator.of(context).push(
       MaterialPageRoute(
         builder: (context) {
-          return Leaderboard();
+          return LeaderboardPage(
+              leaderboardList: LeaderboardRepository.loadLeaderboard());
         },
       ),
     );

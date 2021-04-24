@@ -38,7 +38,8 @@ class _QuizPageState extends State<QuizPage> {
                     ),
                     Padding(
                       padding: EdgeInsets.all(16.0),
-                      child: Text("${pregunta['pregunta']}",
+                      child: Text(
+                        "${pregunta['pregunta']}",
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           fontSize: 35,
@@ -67,7 +68,12 @@ class _QuizPageState extends State<QuizPage> {
                                     color: Colors.black,
                                   ),
                                 ),
-                                onPressed: () {}),
+                                onPressed: () async {
+                                  var list = await QuestionsRepository()
+                                      .getQuestions();
+                                      
+                                  print(list[1]["posiblesRespuestas"][0]);
+                                }),
                           ),
                         ],
                       ),

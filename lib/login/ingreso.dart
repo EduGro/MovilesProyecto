@@ -1,8 +1,9 @@
 import 'package:proyectoMoviles/home/pantalla_principal.dart';
-import 'package:proyectoMoviles/login/registro.dart';
 import 'package:proyectoMoviles/utils/constants.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+
+import 'register/registro.dart';
 
 class Ingreso extends StatefulWidget {
   final String title;
@@ -95,7 +96,6 @@ class _IngresoState extends State<Ingreso> {
                       style: TextStyle(color: Colors.white),
                       controller: emailController,
                       decoration: InputDecoration(
-                        hintText: 'John Doe',
                         hintStyle: TextStyle(
                           color: Colors.white,
                         ),
@@ -180,7 +180,7 @@ class _IngresoState extends State<Ingreso> {
                   text: new TextSpan(
                     children: [
                       new TextSpan(
-                        text: '¿Olvidaste tu password?',
+                        text: '¿Olvidaste tu contraseña?',
                         style: new TextStyle(
                           color: Colors.white,
                         ),
@@ -195,7 +195,7 @@ class _IngresoState extends State<Ingreso> {
                 ),
               ),
               Container(
-                padding: new EdgeInsets.only(top: 75.0),
+                padding: new EdgeInsets.only(top: 50.0),
                 child: new RichText(
                   textAlign: TextAlign.center,
                   text: new TextSpan(
@@ -211,6 +211,7 @@ class _IngresoState extends State<Ingreso> {
                         style: new TextStyle(
                           color: Colors.white,
                           decoration: TextDecoration.underline,
+                          fontSize: 15.0,
                         ),
                         recognizer: new TapGestureRecognizer()
                           ..onTap = () {

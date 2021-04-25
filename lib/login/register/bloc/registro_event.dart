@@ -30,3 +30,14 @@ class PickImageEvent extends RegistroEvent{
   @override
   List<Object> get props => [];
 }
+
+class RegistroFinalGoogleEvent extends RegistroEvent {
+  final String casa;
+  final String patronus;
+  final String varita;
+
+  RegistroFinalGoogleEvent({@required this.casa, @required this.patronus, @required this.varita});
+
+  @override
+  List<Object> get props => [casa,patronus,varita];
+}

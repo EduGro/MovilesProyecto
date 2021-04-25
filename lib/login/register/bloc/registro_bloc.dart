@@ -4,10 +4,12 @@ import 'dart:io';
 import 'package:bloc/bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:meta/meta.dart';
 import 'package:flutter/foundation.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 part 'registro_event.dart';
 part 'registro_state.dart';
@@ -15,6 +17,9 @@ part 'registro_state.dart';
 class RegistroBloc extends Bloc<RegistroEvent, RegistroState> {
   final _collFirestore = FirebaseFirestore.instance;
   File _profilePic;
+  String googleName = '';
+  String googleEmail = '';
+  String googleImage = null;
 
   RegistroBloc() : super(RegistroInitial());
 
@@ -27,16 +32,21 @@ class RegistroBloc extends Bloc<RegistroEvent, RegistroState> {
       yield PickedImageState(image: _profilePic);
     } else if (event is RegistroNormalEvent) {
       String imageUrl = await _uploadFile();
-
       if (imageUrl != null) {
-        //yield LoadingState();
-        await _saveUser(event.name, event.email, event.pass, event.casa[0],
+        await _saveUser(event.name, event.email, event.pass, event.casa,
             event.patronus, event.varita, imageUrl);
-        //yield UsuarioRegistradoState();
+        yield UsuarioRegistradoState(name: event.name, email: event.email);
       } else {
         yield RegistroErrorState(errorMsg: "No se pudo guardar la imagen");
       }
-    } else if (event is RegistroGoogleEvent) {}
+    } else if (event is RegistroGoogleEvent) {
+      await googleRegistro();
+      yield RegistroGoogleState(name: googleName, image: googleImage);
+    } else if(event is RegistroFinalGoogleEvent){
+      await _saveUser(googleName, googleEmail, null, event.casa,
+          event.patronus, event.varita, googleImage);
+      yield UsuarioRegistradoState(name: googleName, email: googleEmail);
+    }
   }
 
   Future<File> _getImage() async {
@@ -92,5 +102,34 @@ class RegistroBloc extends Bloc<RegistroEvent, RegistroState> {
       print("Error: $e");
       return false;
     }
+  }
+
+  Future<void> googleRegistro() async {
+    final googleUser = await GoogleSignIn(scopes: <String>["email"]).signIn();
+    final googleAuth = await googleUser.authentication;
+
+    print("user: ${googleUser.displayName}");
+    googleName = googleUser.displayName;
+    print("user: ${googleUser.email}");
+    googleEmail = googleUser.email;
+    print("user: ${googleUser.photoUrl}");
+    googleImage = googleUser.photoUrl;
+
+    final AuthCredential credential = GoogleAuthProvider.credential(
+      accessToken: googleAuth.accessToken,
+      idToken: googleAuth.idToken,
+    );
+
+    // firebase sign in
+    final authResult =
+        await FirebaseAuth.instance.signInWithCredential(credential);
+    final User user = authResult.user;
+    final firebaseAuthToken = await user.getIdToken();
+    assert(!user.isAnonymous);
+    assert(firebaseAuthToken != null);
+    final User currentUser = FirebaseAuth.instance.currentUser;
+    assert(user.uid == currentUser.uid);
+
+    print("Firebase uaser auth token: $firebaseAuthToken");
   }
 }

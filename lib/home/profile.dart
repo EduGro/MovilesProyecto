@@ -1,12 +1,43 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:proyectoMoviles/login/ingreso.dart';
 import 'package:proyectoMoviles/utils/constants.dart';
 
-class Profile extends StatelessWidget {
-  final String title;
-  final Map<String, String> usuario;
-  const Profile({Key key, this.title, this.usuario}) : super(key: key);
+class Profile extends StatefulWidget {
+  final String userEmail;
+  const Profile({Key key, this.userEmail}) : super(key: key);
+
+  @override
+  _ProfileState createState() => _ProfileState();
+}
+
+class _ProfileState extends State<Profile> {
+  String name, email, wand, patronus, casa, profilePic;
+
+  @override
+  Future<void> initState() {
+    _getUser().then((user) => {print("Get user done")});
+    super.initState();
+  }
+
+  Future<void> _getUser() async {
+    List<QueryDocumentSnapshot> documentList;
+    documentList = await FirebaseFirestore.instance
+        .collection('users')
+        .where("email", isEqualTo: widget.userEmail)
+        .limit(1)
+        .get()
+        .then((value) => value.docs);
+    Map<String, dynamic> user = documentList.first.data();
+    name = user['name'];
+    email = user['email'];
+    wand = user['varita'];
+    patronus = user['patronus'];
+    casa = user['casa'];
+    profilePic = user['image'];
+    print(profilePic);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +48,7 @@ class Profile extends StatelessWidget {
           onPressed: () {},
         ),*/
         centerTitle: true,
-        title: Text(usuario.entries.first.value),
+        title: Text("Perfil"),
         actions: <Widget>[
           IconButton(
             icon: const Icon(Icons.settings),
@@ -43,18 +74,16 @@ class Profile extends StatelessWidget {
                   Container(
                     height: 150,
                     child: CircleAvatar(
-                      backgroundImage: NetworkImage(
-                        PROFILE_PICTURE,
-                      ),
-                      minRadius: 40,
-                      maxRadius: 80,
+                      backgroundImage: NetworkImage(profilePic),
+                      minRadius: 20,
+                      maxRadius: 50,
                     ),
                   ),
                   SizedBox(
                     height: 25,
                   ),
                   Text(
-                    usuario["nombre"],
+                    name,
                     style: Theme.of(context)
                         .textTheme
                         .headline3
@@ -65,7 +94,7 @@ class Profile extends StatelessWidget {
                     height: 25,
                   ),
                   Text(
-                    usuario["email"],
+                    email,
                     style: Theme.of(context)
                         .textTheme
                         .headline5
@@ -76,7 +105,7 @@ class Profile extends StatelessWidget {
                     height: 40,
                   ),
                   Text(
-                    "Casa:",
+                    "Casa",
                     style: Theme.of(context)
                         .textTheme
                         .headline4
@@ -87,7 +116,7 @@ class Profile extends StatelessWidget {
                     height: 10,
                   ),
                   Text(
-                    "Gryffindor",
+                    casa,
                     style: Theme.of(context)
                         .textTheme
                         .headline6
@@ -98,7 +127,7 @@ class Profile extends StatelessWidget {
                     height: 20,
                   ),
                   Text(
-                    "Varita:",
+                    "Varita",
                     style: Theme.of(context)
                         .textTheme
                         .headline5
@@ -122,10 +151,10 @@ class Profile extends StatelessWidget {
                       child: RaisedButton(
                         child: Text(PROFILE_LOGOUT),
                         onPressed: () {
-                          Navigator.of(context).push(
+                          /*Navigator.of(context).push(
                             MaterialPageRoute(
                                 builder: (context) => Ingreso(title: title)),
-                          );
+                          );*/
                         },
                       ),
                     ),

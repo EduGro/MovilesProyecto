@@ -16,3 +16,5 @@ class EntrarEvent extends LoginEvent {
   @override
   List<Object> get props => [pass, email];
 }
+
+class LoginGoogleEvent extends LoginEvent {}

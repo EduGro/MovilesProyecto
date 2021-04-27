@@ -23,8 +23,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  flutter_bloc: ^6.1.2
-  equatable: ^1.2.6
+  flutter_bloc: ^7.0.0
+  equatable: ^2.0.0
   firebase_core: ^1.0.1
   auth_buttons: ^1.0.0
   firebase_auth: ^1.0.1  

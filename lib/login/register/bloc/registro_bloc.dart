@@ -31,20 +31,25 @@ class RegistroBloc extends Bloc<RegistroEvent, RegistroState> {
       _profilePic = await _getImage();
       yield PickedImageState(image: _profilePic);
     } else if (event is RegistroNormalEvent) {
-      String imageUrl = await _uploadFile();
-      if (imageUrl != null) {
-        await _saveUser(event.name, event.email, event.pass, event.casa,
-            event.patronus, event.varita, imageUrl);
-        yield UsuarioRegistradoState(name: event.name, email: event.email);
+      bool yaExiste = await _searchDB(event.email);
+      if (yaExiste) {
+        String imageUrl = await _uploadFile();
+        if (imageUrl != null) {
+          await _saveUser(event.name, event.email, event.pass, event.casa,
+              event.patronus, event.varita, imageUrl);
+          yield UsuarioRegistradoState(name: event.name, email: event.email);
+        } else {
+          yield RegistroErrorState(errorMsg: "No se pudo guardar la imagen");
+        }
       } else {
-        yield RegistroErrorState(errorMsg: "No se pudo guardar la imagen");
+        yield YaExisteState();
       }
     } else if (event is RegistroGoogleEvent) {
       await googleRegistro();
       yield RegistroGoogleState(name: googleName, image: googleImage);
-    } else if(event is RegistroFinalGoogleEvent){
-      await _saveUser(googleName, googleEmail, null, event.casa,
-          event.patronus, event.varita, googleImage);
+    } else if (event is RegistroFinalGoogleEvent) {
+      await _saveUser(googleName, googleEmail, null, event.casa, event.patronus,
+          event.varita, googleImage);
       yield UsuarioRegistradoState(name: googleName, email: googleEmail);
     }
   }
@@ -120,7 +125,6 @@ class RegistroBloc extends Bloc<RegistroEvent, RegistroState> {
       idToken: googleAuth.idToken,
     );
 
-    // firebase sign in
     final authResult =
         await FirebaseAuth.instance.signInWithCredential(credential);
     final User user = authResult.user;
@@ -131,5 +135,21 @@ class RegistroBloc extends Bloc<RegistroEvent, RegistroState> {
     assert(user.uid == currentUser.uid);
 
     print("Firebase uaser auth token: $firebaseAuthToken");
+  }
+
+  Future<bool> _searchDB(String email) async {
+    List<QueryDocumentSnapshot> documentList;
+    documentList = await FirebaseFirestore.instance
+        .collection('users')
+        .where("email", isEqualTo: email)
+        .limit(1)
+        .get()
+        .then((value) => value.docs);
+
+    if (documentList.length > 1) {
+      return true;
+    } else {
+      return false;
+    }
   }
 }

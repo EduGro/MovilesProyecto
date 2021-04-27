@@ -39,16 +39,6 @@ class _RegistroState extends State<Registro> {
 
   List<String> varitas = ["1", "2", "3", "4"];
 
-  void showSnacks(String text) {
-    _scaffoldKey.currentState
-      ..hideCurrentSnackBar()
-      ..showSnackBar(
-        SnackBar(
-          content: Text(text),
-        ),
-      );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -60,6 +50,10 @@ class _RegistroState extends State<Registro> {
               listener: (context, state) {
                 if (state is PickedImageState) {
                   selectedImage = state.image;
+                }
+                if (state is YaExisteState) {
+                  showSnacks("Ya existe un usuario con ese correo");
+                  //volver a estado inicial
                 }
               },
               builder: (context, state) {
@@ -219,7 +213,10 @@ class _RegistroState extends State<Registro> {
                   );
                 }
                 if (state is UsuarioRegistradoState) {
-                  Map<String, String> user = {'nombre': state.name, "email": state.email};
+                  Map<String, String> user = {
+                    'nombre': state.name,
+                    "email": state.email
+                  };
                   return PantallaPrincipal(
                     usuario: user,
                     title: "idk",
@@ -521,4 +518,14 @@ class _RegistroState extends State<Registro> {
               },
             )));
   }
+
+  void showSnacks(String text) {
+      _scaffoldKey.currentState
+        ..hideCurrentSnackBar()
+        ..showSnackBar(
+          SnackBar(
+            content: Text(text),
+          ),
+        );
+    }
 }

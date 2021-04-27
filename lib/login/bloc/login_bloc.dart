@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:meta/meta.dart';
 
 part 'login_event.dart';
@@ -15,6 +16,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
   Stream<LoginState> mapEventToState(
     LoginEvent event,
   ) async* {
+    //await GoogleSignIn(scopes: <String>["email"]).singOut();
     if (event is EntrarEvent) {
       String cont = await _searchDB(event.email, event.pass);
       if (event.pass == cont) {

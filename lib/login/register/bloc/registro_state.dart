@@ -42,3 +42,5 @@ class RegistroGoogleState extends RegistroState {
   @override
   List<Object> get props => [name, image];
 }
+
+class YaExisteState extends RegistroState {}

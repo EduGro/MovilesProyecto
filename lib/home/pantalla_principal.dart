@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:proyectoMoviles/Versus/versus.dart';
 import 'package:proyectoMoviles/others/leaderboard_page.dart';
-import 'package:proyectoMoviles/profile.dart';
+import 'package:proyectoMoviles/home/profile.dart';
 import 'package:proyectoMoviles/others/friends_page.dart';
 import 'package:proyectoMoviles/others/house_page.dart';
 import 'package:proyectoMoviles/utils/temp_friend_list.dart';
@@ -11,9 +11,8 @@ import '../adventure/adventure.dart';
 import '../quiz/question_page.dart';
 
 class PantallaPrincipal extends StatefulWidget {
-  final String title;
-  final Map<String, String> usuario;
-  PantallaPrincipal({Key key, this.title, this.usuario}) : super(key: key);
+  final String userEmail;
+  PantallaPrincipal({Key key, this.userEmail}) : super(key: key);
 
   @override
   _PantallaPrincipalState createState() => _PantallaPrincipalState();
@@ -34,8 +33,7 @@ class _PantallaPrincipalState extends State<PantallaPrincipal> {
               Navigator.of(context).push(
                 MaterialPageRoute(
                   builder: (context) => Profile(
-                    title: widget.title,
-                    usuario: widget.usuario,
+                    userEmail: widget.userEmail,
                   ),
                 ),
               );

@@ -213,13 +213,8 @@ class _RegistroState extends State<Registro> {
                   );
                 }
                 if (state is UsuarioRegistradoState) {
-                  Map<String, String> user = {
-                    'nombre': state.name,
-                    "email": state.email
-                  };
                   return PantallaPrincipal(
-                    usuario: user,
-                    title: "idk",
+                    userEmail: state.email,
                   );
                 } else {
                   return Center(

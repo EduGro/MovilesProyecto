@@ -26,12 +26,11 @@ class PickedImageState extends RegistroState {
 }
 
 class UsuarioRegistradoState extends RegistroState {
-  final String name;
   final String email;
 
-  UsuarioRegistradoState({@required this.name, @required this.email});
+  UsuarioRegistradoState({@required this.email});
   @override
-  List<Object> get props => [name, email];
+  List<Object> get props => [email];
 }
 
 class RegistroGoogleState extends RegistroState {

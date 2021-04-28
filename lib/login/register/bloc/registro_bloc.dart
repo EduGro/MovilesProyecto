@@ -37,7 +37,7 @@ class RegistroBloc extends Bloc<RegistroEvent, RegistroState> {
         if (imageUrl != null) {
           await _saveUser(event.name, event.email, event.pass, event.casa,
               event.patronus, event.varita, imageUrl);
-          yield UsuarioRegistradoState(name: event.name, email: event.email);
+          yield UsuarioRegistradoState(email: event.email);
         } else {
           yield RegistroErrorState(errorMsg: "No se pudo guardar la imagen");
         }
@@ -45,12 +45,12 @@ class RegistroBloc extends Bloc<RegistroEvent, RegistroState> {
         yield YaExisteState();
       }
     } else if (event is RegistroGoogleEvent) {
-      await googleRegistro();
+      await _googleRegistro();
       yield RegistroGoogleState(name: googleName, image: googleImage);
     } else if (event is RegistroFinalGoogleEvent) {
       await _saveUser(googleName, googleEmail, null, event.casa, event.patronus,
           event.varita, googleImage);
-      yield UsuarioRegistradoState(name: googleName, email: googleEmail);
+      yield UsuarioRegistradoState(email: googleEmail);
     }
   }
 
@@ -109,7 +109,7 @@ class RegistroBloc extends Bloc<RegistroEvent, RegistroState> {
     }
   }
 
-  Future<void> googleRegistro() async {
+  Future<void> _googleRegistro() async {
     final googleUser = await GoogleSignIn(scopes: <String>["email"]).signIn();
     final googleAuth = await googleUser.authentication;
 
@@ -129,12 +129,11 @@ class RegistroBloc extends Bloc<RegistroEvent, RegistroState> {
         await FirebaseAuth.instance.signInWithCredential(credential);
     final User user = authResult.user;
     final firebaseAuthToken = await user.getIdToken();
-    assert(!user.isAnonymous);
     assert(firebaseAuthToken != null);
     final User currentUser = FirebaseAuth.instance.currentUser;
     assert(user.uid == currentUser.uid);
 
-    print("Firebase uaser auth token: $firebaseAuthToken");
+    print("Firebase user auth token: $firebaseAuthToken");
   }
 
   Future<bool> _searchDB(String email) async {

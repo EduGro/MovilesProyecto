@@ -1,20 +1,21 @@
 part of 'quiz_bloc.dart';
 
-@immutable
-abstract class QuizState {}
+abstract class QuizState extends Equatable {
+  const QuizState();
 
-class QuizInitial extends QuizState {
   @override
-  // TODO: implement props
-  List<Object> get props => throw UnimplementedError();
+  List<Object> get props => [];
 }
 
-class QuizStartState extends QuizState {
+class QuizInitial extends QuizState {}
+
+class QuestionLoadedState extends QuizState {
+  final String pregunta;
   final int score;
+  final List resp;
+  final String correcta;
 
-  QuizStartState({@required this.score});
-
+  QuestionLoadedState({@required this.pregunta, @required this.score, @required this.resp, @required this.correcta});
   @override
-  // TODO: implement props
-  List<Object> get props => [score];
+  List<Object> get props => [pregunta, score, resp, correcta];
 }

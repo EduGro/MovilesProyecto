@@ -11,4 +11,10 @@ class LoginInitial extends LoginState {}
 
 class EntrarState extends LoginState {}
 
-class EntrarSuccessState extends LoginState {}
+class EntrarSuccessState extends LoginState {
+  final String email;
+
+  EntrarSuccessState({@required this.email});
+  @override
+  List<Object> get props => [email];
+}

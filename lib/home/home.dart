@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:proyectoMoviles/profile.dart';
-import 'package:proyectoMoviles/utils/constants.dart';
+import 'package:proyectoMoviles/home/profile.dart';
 
 class Home extends StatefulWidget {
-  final String title;
-  final Map<String, String> usuario;
-  Home({Key key, this.title, this.usuario}) : super(key: key);
+  final String userEmail;
+  Home({Key key, this.userEmail}) : super(key: key);
 
   @override
   _HomeState createState() => _HomeState();
@@ -29,7 +27,7 @@ class _HomeState extends State<Home> {
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
-        title: Text(widget.title),
+        title: Text("AAAA"),
       ),
       body: Align(
         alignment: Alignment.center,
@@ -43,8 +41,7 @@ class _HomeState extends State<Home> {
                   Navigator.of(context).push(
                     MaterialPageRoute(
                       builder: (context) => Profile(
-                        title: widget.title,
-                        usuario: widget.usuario,
+                        userEmail: widget.userEmail,
                       ),
                     ),
                   );

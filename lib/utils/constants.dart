@@ -2,13 +2,6 @@ import 'package:flutter/material.dart';
 
 // home
 const String APP_TITLE = "HOGWARTS";
-// profile
-const String PROFILE_NAME = "Anna Doe";
-const String PROFILE_LOGOUT = "Cerrar sesion";
-const String PROFILE_EMAIL = "anna@doe.com";
-const String PROFILE_PICTURE =
-    "https://dkpp.go.id/wp-content/uploads/2018/10/photo.jpg";
-
 // app
 const _redPrimaryValue = 0xFF800000;
 const Color PRIMARY_COLOR = const MaterialColor(

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:proyectoMoviles/home/profile.dart';
-import 'package:proyectoMoviles/utils/constants.dart';
 
 class Home extends StatefulWidget {
   final String userEmail;

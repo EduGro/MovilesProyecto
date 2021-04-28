@@ -19,7 +19,6 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
   Stream<LoginState> mapEventToState(
     LoginEvent event,
   ) async* {
-    await GoogleSignIn(scopes: <String>["email"]).signOut();
     if (event is EntrarEvent) {
       String cont = await _searchDB(event.email, event.pass);
       if (event.pass == cont) {

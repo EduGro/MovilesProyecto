@@ -6,32 +6,15 @@ import 'package:proyectoMoviles/login/ingreso.dart';
 import 'package:proyectoMoviles/utils/constants.dart';
 
 class Profile extends StatefulWidget {
-  final String userEmail;
-  const Profile({Key key, this.userEmail}) : super(key: key);
+  final bool isGoogle;
+  final Map<String, dynamic> user;
+  const Profile({Key key, this.isGoogle, this.user}) : super(key: key);
 
   @override
   _ProfileState createState() => _ProfileState();
 }
 
 class _ProfileState extends State<Profile> {
-  bool isGoogle;
-
-  Future<Map<String, dynamic>> _getUser() async {
-    List<QueryDocumentSnapshot> documentList;
-    documentList = await FirebaseFirestore.instance
-        .collection('users')
-        .where("email", isEqualTo: widget.userEmail)
-        .limit(1)
-        .get()
-        .then((value) => value.docs);
-    if (documentList.first.data()['password'] != null) {
-      isGoogle = false;
-    } else {
-      isGoogle = true;
-    }
-    return documentList.first.data();
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -50,11 +33,7 @@ class _ProfileState extends State<Profile> {
           ),
         ],
       ),
-      body: FutureBuilder(
-        future: _getUser(),
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            return Container(
+      body: Container(
               decoration: BoxDecoration(
                 image: DecorationImage(
                   image: AssetImage('assets/BkgnGryffindorUser.jpg'),
@@ -71,8 +50,8 @@ class _ProfileState extends State<Profile> {
                         Container(
                           height: 150,
                           child: CircleAvatar(
-                            backgroundImage: snapshot.data['image'] != null
-                                ? NetworkImage(snapshot.data['image'])
+                            backgroundImage: widget.user['image'] != null
+                                ? NetworkImage(widget.user['image'])
                                 : NetworkImage(
                                     "https://mastodon.sdf.org/system/accounts/avatars/000/108/313/original/035ab20c290d3722.png"),
                             minRadius: 20,
@@ -83,7 +62,7 @@ class _ProfileState extends State<Profile> {
                           height: 20,
                         ),
                         Text(
-                          snapshot.data['name'],
+                          widget.user['name'],
                           style: Theme.of(context)
                               .textTheme
                               .headline3
@@ -94,7 +73,7 @@ class _ProfileState extends State<Profile> {
                           height: 20,
                         ),
                         Text(
-                          snapshot.data['email'],
+                          widget.user['email'],
                           style: Theme.of(context)
                               .textTheme
                               .headline6
@@ -116,7 +95,7 @@ class _ProfileState extends State<Profile> {
                           height: 10,
                         ),
                         Text(
-                          snapshot.data['casa'],
+                          widget.user['casa'],
                           style: Theme.of(context)
                               .textTheme
                               .headline6
@@ -138,7 +117,7 @@ class _ProfileState extends State<Profile> {
                           image: AssetImage('assets/PropWand.png'),
                         ),
                         Text(
-                          snapshot.data['varita'],
+                          widget.user['varita'],
                           style: Theme.of(context)
                               .textTheme
                               .headline6
@@ -160,7 +139,7 @@ class _ProfileState extends State<Profile> {
                           height: 10,
                         ),
                         Text(
-                          snapshot.data['patronus'],
+                          widget.user['patronus'],
                           style: Theme.of(context)
                               .textTheme
                               .headline6
@@ -188,7 +167,7 @@ class _ProfileState extends State<Profile> {
                             ),
                             height: 40,
                             onPressed: () async {
-                              if (isGoogle) {
+                              if (widget.isGoogle) {
                                 await GoogleSignIn(scopes: <String>["email"])
                                     .signOut();
                               }
@@ -204,11 +183,6 @@ class _ProfileState extends State<Profile> {
                   ],
                 ),
               ),
-            );
-          } else {
-            return CircularProgressIndicator();
-          }
-        },
       ),
     );
   }

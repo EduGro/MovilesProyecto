@@ -17,3 +17,12 @@ class NextQuestionEvent extends QuizEvent {
   @override
   List<Object> get props => [fueCorrecta];
 }
+
+class EndQuizEvent extends QuizEvent {
+  final String casa;
+
+  EndQuizEvent({@required this.casa});
+
+  @override
+  List<Object> get props => [casa];
+}

@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:proyectoMoviles/home/pantalla_principal.dart';
 import 'bloc/quiz_bloc.dart';
 
 class QuizPage extends StatefulWidget {
-  QuizPage({Key key}) : super(key: key);
+  final String casa;
+  QuizPage({Key key, this.casa}) : super(key: key);
 
   @override
   _QuizPageState createState() => _QuizPageState();
@@ -19,8 +21,9 @@ class _QuizPageState extends State<QuizPage> {
         ),
         backgroundColor: Color.fromARGB(0xFF, 0xEC, 0xE2, 0xC6),
         body: BlocProvider(
-            create: (context) =>
-                QuizBloc()..add(InitialEvent())..add(NextQuestionEvent(fueCorrecta: false)),
+            create: (context) => QuizBloc()
+              ..add(InitialEvent())
+              ..add(NextQuestionEvent(fueCorrecta: false)),
             child: BlocConsumer<QuizBloc, QuizState>(
               listener: (context, state) {
                 // TODO: implement listener
@@ -38,7 +41,7 @@ class _QuizPageState extends State<QuizPage> {
                           ),
                         ),
                         Container(
-                          height: MediaQuery.of(context).size.height*0.2,
+                          height: MediaQuery.of(context).size.height * 0.2,
                           padding: EdgeInsets.all(16.0),
                           child: Text(
                             "${state.pregunta}",
@@ -72,7 +75,8 @@ class _QuizPageState extends State<QuizPage> {
                                       ),
                                     ),
                                     onPressed: () {
-                                      checkAnswer = _checkAnswer(state.resp[3], state.correcta);
+                                      checkAnswer = _checkAnswer(
+                                          state.resp[3], state.correcta);
                                       BlocProvider.of<QuizBloc>(context).add(
                                           NextQuestionEvent(
                                               fueCorrecta: checkAnswer));
@@ -100,7 +104,8 @@ class _QuizPageState extends State<QuizPage> {
                                       ),
                                     ),
                                     onPressed: () {
-                                      checkAnswer = _checkAnswer(state.resp[0], state.correcta);
+                                      checkAnswer = _checkAnswer(
+                                          state.resp[0], state.correcta);
                                       BlocProvider.of<QuizBloc>(context).add(
                                           NextQuestionEvent(
                                               fueCorrecta: checkAnswer));
@@ -128,7 +133,8 @@ class _QuizPageState extends State<QuizPage> {
                                       ),
                                     ),
                                     onPressed: () {
-                                      checkAnswer = _checkAnswer(state.resp[2], state.correcta);
+                                      checkAnswer = _checkAnswer(
+                                          state.resp[2], state.correcta);
                                       BlocProvider.of<QuizBloc>(context).add(
                                           NextQuestionEvent(
                                               fueCorrecta: checkAnswer));
@@ -156,7 +162,8 @@ class _QuizPageState extends State<QuizPage> {
                                       ),
                                     ),
                                     onPressed: () {
-                                      checkAnswer = _checkAnswer(state.resp[1], state.correcta);
+                                      checkAnswer = _checkAnswer(
+                                          state.resp[1], state.correcta);
                                       BlocProvider.of<QuizBloc>(context).add(
                                           NextQuestionEvent(
                                               fueCorrecta: checkAnswer));
@@ -175,6 +182,23 @@ class _QuizPageState extends State<QuizPage> {
                             ),
                           ),
                         ),
+                        MaterialButton(
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(5.0)),
+                            color: Colors.deepPurple,
+                            child: Text(
+                              "Terminar ronda",
+                              style: TextStyle(
+                                fontSize: 15,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                              ),
+                            ),
+                            onPressed: () {
+                              BlocProvider.of<QuizBloc>(context).add(
+                                  EndQuizEvent(casa: widget.casa));
+                              Navigator.of(context).pop();
+                            }),
                       ],
                     ),
                   );

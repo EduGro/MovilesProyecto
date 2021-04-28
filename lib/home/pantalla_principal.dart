@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:proyectoMoviles/others/leaderboard_page.dart';
 import 'package:proyectoMoviles/home/profile.dart';
@@ -19,6 +20,32 @@ class PantallaPrincipal extends StatefulWidget {
 
 class _PantallaPrincipalState extends State<PantallaPrincipal> {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+  bool isGoogle;
+  Map<String, dynamic> user;
+  String casa;
+
+  @override
+  void initState() {
+    _getUser().then((t) => print('Async done'));
+    super.initState();
+  }
+
+  Future<void> _getUser() async {
+    List<QueryDocumentSnapshot> documentList;
+    documentList = await FirebaseFirestore.instance
+        .collection('users')
+        .where("email", isEqualTo: widget.userEmail)
+        .limit(1)
+        .get()
+        .then((value) => value.docs);
+    if (documentList.first.data()['password'] != null) {
+      isGoogle = false;
+    } else {
+      isGoogle = true;
+    }
+    casa = documentList.first.data()['casa'][0];
+    user = documentList.first.data();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +59,8 @@ class _PantallaPrincipalState extends State<PantallaPrincipal> {
               Navigator.of(context).push(
                 MaterialPageRoute(
                   builder: (context) => Profile(
-                    userEmail: widget.userEmail,
+                    isGoogle: isGoogle,
+                    user: user,
                   ),
                 ),
               );
@@ -236,7 +264,9 @@ class _PantallaPrincipalState extends State<PantallaPrincipal> {
     Navigator.of(context).push(
       MaterialPageRoute(
         builder: (context) {
-          return QuizPage();
+          return QuizPage(
+            casa: casa,
+          );
         },
       ),
     );

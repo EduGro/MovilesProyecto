@@ -25,15 +25,16 @@ class VersusPlayerAttackState extends VersusState {
   final int endX;
   final int specialX;
   final int specialY;
+  final String texto;
 
-  VersusPlayerAttackState({
-    @required this.liveAi,
-    @required this.liveP,
-    @required this.endX,
-    @required this.endY,
-    @required this.specialX,
-    @required this.specialY,
-  });
+  VersusPlayerAttackState(
+      {@required this.liveAi,
+      @required this.liveP,
+      @required this.endX,
+      @required this.endY,
+      @required this.specialX,
+      @required this.specialY,
+      @required this.texto});
 
   @override
   List<Object> get props => [liveAi, liveP];

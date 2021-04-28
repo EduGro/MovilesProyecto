@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:proyectoMoviles/Versus/versus.dart';
 import 'package:proyectoMoviles/others/leaderboard_page.dart';
 import 'package:proyectoMoviles/home/profile.dart';
 import 'package:proyectoMoviles/others/friends_page.dart';
@@ -283,7 +284,13 @@ class _PantallaPrincipalState extends State<PantallaPrincipal> {
   }
 
   void _openVS() {
-    // TODO
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) {
+          return Versus();
+        },
+      ),
+    );
   }
 
   void _openFriends() {

@@ -9,8 +9,12 @@ class StartEvent extends VersusEvent {
 }
 
 class DefendEvent extends VersusEvent {
+  final int liveAi;
+  final int liveP;
+
+  DefendEvent(this.liveAi, this.liveP);
   @override
-  List<Object> get props => [];
+  List<Object> get props => [this.liveAi, this.liveP];
 }
 
 class AttackEvent extends VersusEvent {

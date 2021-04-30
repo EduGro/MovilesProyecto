@@ -4,11 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animation_progress_bar/flutter_animation_progress_bar.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:proyectoMoviles/Versus/bloc/versus_bloc.dart';
-import 'package:proyectoMoviles/Versus/bloc/versus_bloc.dart';
 import 'package:proyectoMoviles/utils/constants.dart';
 
 class Versus extends StatefulWidget {
-  Versus({Key key}) : super(key: key);
+  final String casa;
+  Versus({Key key, this.casa}) : super(key: key);
 
   @override
   _VersusState createState() => _VersusState();
@@ -34,9 +34,11 @@ class _VersusState extends State<Versus> {
               } else if (state is VersusAiAttackState) {
                 return versusMockUp(context, state.liveAi, state.liveP);
               } else if (state is VersusEndState) {
-                return PutText(context, state.winner);
+                return EndScreen(
+                    context, state.winner, state.casa, state.score);
               } else {
-                BlocProvider.of<VersusBloc>(context).add(StartEvent());
+                BlocProvider.of<VersusBloc>(context)
+                    .add(StartEvent(casa: widget.casa));
                 return Container();
               }
             }),
@@ -46,9 +48,8 @@ class _VersusState extends State<Versus> {
 }
 
 // ignore: non_constant_identifier_names
-Container PutText(BuildContext context, bool winner) {
-  String labelText =
-      winner ? "Eres un ganador" : "Haz fallado, intentalo de nuevo";
+Container EndScreen(BuildContext context, bool winner, String casa, int score) {
+  String labelText = winner ? "Eres un ganador" : "Intentalo de nuevo";
   String wizardAsset = "Wizard";
   wizardAsset += winner ? "Player" : "Ai";
   return Container(
@@ -71,19 +72,76 @@ Container PutText(BuildContext context, bool winner) {
           ),
         ),
         Padding(
-          padding: const EdgeInsets.only(top: 100.0),
-          child: Align(
-            alignment: Alignment.topCenter,
-            child: Text(
-              labelText,
-              style: Theme.of(context)
-                  .textTheme
-                  .headline3
-                  .copyWith(color: Colors.white),
-              textAlign: TextAlign.center,
-            ),
+          padding: const EdgeInsets.only(top: 75.0),
+          child: Column(
+            children: [
+              Align(
+                alignment: Alignment.topCenter,
+                child: Text(
+                  labelText,
+                  style: Theme.of(context)
+                      .textTheme
+                      .headline3
+                      .copyWith(color: Colors.white),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+              Align(
+                alignment: Alignment.topCenter,
+                child: Text(
+                  "Obtuviste $score puntos",
+                  style: Theme.of(context)
+                      .textTheme
+                      .headline6
+                      .copyWith(color: Colors.white),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 15.0),
+                child: Align(
+                  alignment: Alignment.center,
+                  child: ButtonTheme(
+                    minWidth: 200.0,
+                    height: 50.0,
+                    child: RaisedButton(
+                      onPressed: () {
+                        BlocProvider.of<VersusBloc>(context)
+                            .add(StartEvent(casa: casa));
+                      },
+                      child: Text("Intentarlo de nuevo",
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyText1
+                              .copyWith(color: Colors.white)),
+                    ),
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 15.0),
+                child: Align(
+                  alignment: Alignment.center,
+                  child: ButtonTheme(
+                    minWidth: 200.0,
+                    height: 50.0,
+                    child: RaisedButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: Text("Regresar al menu principal",
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyText1
+                              .copyWith(color: Colors.white)),
+                    ),
+                  ),
+                ),
+              ),
+            ],
           ),
         ),
+
         Padding(
           padding: const EdgeInsets.all(0),
           child: Container(

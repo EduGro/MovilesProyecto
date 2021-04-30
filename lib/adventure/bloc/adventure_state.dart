@@ -50,8 +50,10 @@ class AdventureGestureState extends AdventureState {
 }
 
 class AdventureEndState extends AdventureState {
-  AdventureEndState();
+  final String casa;
+  final int score;
+  AdventureEndState({@required this.casa, @required this.score});
 
   @override
-  List<Object> get props => [];
+  List<Object> get props => [casa, score];
 }

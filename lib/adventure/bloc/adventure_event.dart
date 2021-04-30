@@ -4,8 +4,10 @@ part of 'adventure_bloc.dart';
 abstract class AdventureEvent extends Equatable {}
 
 class StartEvent extends AdventureEvent {
+  final String casa;
+  StartEvent({@required this.casa});
   @override
-  List<Object> get props => [];
+  List<Object> get props => [casa];
 }
 
 class NextEvent extends AdventureEvent {
@@ -22,6 +24,9 @@ class GestureEvent extends AdventureEvent {
 }
 
 class EndEvent extends AdventureEvent {
+  final String casa;
+
+  EndEvent({@required this.casa});
   @override
-  List<Object> get props => [];
+  List<Object> get props => [casa];
 }

@@ -5,6 +5,7 @@ import 'package:proyectoMoviles/others/leaderboard_page.dart';
 import 'package:proyectoMoviles/home/profile.dart';
 import 'package:proyectoMoviles/others/friends_page.dart';
 import 'package:proyectoMoviles/others/house_page.dart';
+import 'package:proyectoMoviles/searchFriends/searchFriends.dart';
 import 'package:proyectoMoviles/utils/temp_friend_list.dart';
 import 'package:proyectoMoviles/utils/temp_leaderboard.dart';
 import 'package:proyectoMoviles/utils/temp_topics.dart';
@@ -94,7 +95,9 @@ class _PantallaPrincipalState extends State<PantallaPrincipal> {
                         color: Colors.white,
                       ),
                     ),
-                    onTap: () {},
+                    onTap: () {
+                      _opendSearchFriends();
+                    },
                   ),
                 ),
                 Card(
@@ -277,7 +280,19 @@ class _PantallaPrincipalState extends State<PantallaPrincipal> {
     Navigator.of(context).push(
       MaterialPageRoute(
         builder: (context) {
-          return Adventure();
+          return Adventure(
+            casa: casa,
+          );
+        },
+      ),
+    );
+  }
+
+  void _opendSearchFriends() {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) {
+          return SearchFriends();
         },
       ),
     );
@@ -287,7 +302,9 @@ class _PantallaPrincipalState extends State<PantallaPrincipal> {
     Navigator.of(context).push(
       MaterialPageRoute(
         builder: (context) {
-          return Versus();
+          return Versus(
+            casa: casa,
+          );
         },
       ),
     );

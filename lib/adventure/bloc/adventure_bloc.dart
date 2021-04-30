@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 
@@ -57,12 +58,14 @@ class AdventureBloc extends Bloc<AdventureEvent, AdventureState> {
   int listSize = 0;
   int index = 0;
   int score = 0;
+  String casa;
 
   @override
   Stream<AdventureState> mapEventToState(
     AdventureEvent event,
   ) async* {
     if (event is StartEvent) {
+      casa = event.casa;
       index = 0;
       listSize = list.length;
       yield AdventureStartState(text: list[index], score: score);
@@ -114,14 +117,32 @@ class AdventureBloc extends Bloc<AdventureEvent, AdventureState> {
                 specialY: 0);
         } else
           yield AdventureNextState(text: list[index], score: score);
-      } else
-        yield AdventureEndState();
+      } else {
+        await _updateScore(casa);
+        yield AdventureEndState(casa: casa, score: score);
+      }
     } else if (event is GestureEvent) {
       index++;
       score += event.score;
       yield AdventureNextState(text: list[index], score: score);
     } else if (event is EndEvent) {
-      yield AdventureEndState();
+      await _updateScore(casa);
+      yield AdventureEndState(casa: casa, score: score);
+    }
+  }
+
+  Future<void> _updateScore(String inicial) async {
+    try {
+      var puntos = await FirebaseFirestore.instance
+          .collection('casas')
+          .get()
+          .then((value) => value.docs);
+      await FirebaseFirestore.instance
+          .collection('casas')
+          .doc('3GAIseZjA3cUFxj68lXT')
+          .update({"$inicial": puntos.first.data()[inicial] + score});
+    } catch (e) {
+      throw e;
     }
   }
 }

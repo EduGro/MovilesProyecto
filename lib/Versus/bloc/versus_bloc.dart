@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:bloc/bloc.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
 
@@ -13,12 +14,14 @@ class VersusBloc extends Bloc<VersusEvent, VersusState> {
   List<String> list = ["7", "7A", "0", "0A"];
   int liveAi = 100;
   int liveP = 100;
+  String casa;
 
   @override
   Stream<VersusState> mapEventToState(
     VersusEvent event,
   ) async* {
     if (event is StartEvent) {
+      casa = event.casa;
       yield VersusStartState(liveAi: liveAi, liveP: liveP);
     } else if (event is AttackEvent) {
       var index = Random().nextInt(4);
@@ -70,17 +73,35 @@ class VersusBloc extends Bloc<VersusEvent, VersusState> {
               specialY: 0,
               texto: "PropWand");
       } else
-        yield VersusEndState(winner: false);
+        yield VersusEndState(winner: false, casa: casa, score: 0);
     } else if (event is DefendEvent) {
       liveAi = event.liveAi;
       liveP = event.liveP;
       if (liveAi > 0)
         yield VersusAiAttackState(liveAi: liveAi, liveP: liveP);
-      else
-        yield VersusEndState(winner: true);
+      else {
+        await _updateScore(casa);
+        yield VersusEndState(winner: true, casa: casa, score: liveP);
+      }
     } else if (event is EndEvent) {
       var winner = liveAi > 0 ? false : true;
-      yield VersusEndState(winner: winner);
+      await _updateScore(event.casa);
+      yield VersusEndState(winner: winner, casa: casa, score: liveP);
+    }
+  }
+
+  Future<void> _updateScore(String inicial) async {
+    try {
+      var puntos = await FirebaseFirestore.instance
+          .collection('casas')
+          .get()
+          .then((value) => value.docs);
+      await FirebaseFirestore.instance
+          .collection('casas')
+          .doc('3GAIseZjA3cUFxj68lXT')
+          .update({"$inicial": puntos.first.data()[inicial] + liveP});
+    } catch (e) {
+      throw e;
     }
   }
 }

@@ -5,7 +5,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:proyectoMoviles/adventure/bloc/adventure_bloc.dart';
 
 class Adventure extends StatefulWidget {
-  Adventure({Key key}) : super(key: key);
+  final String casa;
+  Adventure({Key key, this.casa}) : super(key: key);
 
   @override
   _AdventureState createState() => _AdventureState();
@@ -30,14 +31,120 @@ class _AdventureState extends State<Adventure> {
             return PutText(state.text, context, state.score);
           } else if (state is AdventureGestureState) {
             return GestureAdventure(state, context);
+          } else if (state is AdventureEndState) {
+            return EndScreen(context, state.casa, state.score);
           } else {
-            BlocProvider.of<AdventureBloc>(context).add(StartEvent());
+            BlocProvider.of<AdventureBloc>(context)
+                .add(StartEvent(casa: widget.casa));
             return Container();
           }
         }),
       ),
     );
   }
+}
+
+// ignore: non_constant_identifier_names
+Container EndScreen(BuildContext context, String casa, int score) {
+  return Container(
+    decoration: BoxDecoration(
+      image: DecorationImage(
+        image: AssetImage('assets/BkgdForestWide.png'),
+        fit: BoxFit.cover,
+      ),
+    ),
+    child: Stack(
+      children: [
+        //In order to have the complete background image
+        Align(
+          alignment: Alignment.bottomCenter,
+          child: Row(
+            mainAxisSize: MainAxisSize.max,
+            children: <Widget>[
+              Text(""),
+            ],
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.only(top: 100),
+          child: Container(
+            height: double.infinity,
+            alignment: Alignment.center, // This is needed
+            child: Stack(
+              children: [
+                RotationTransition(
+                  turns: new AlwaysStoppedAnimation(90 / 360),
+                  child: new Image(
+                    image: AssetImage('assets/PropScroll.png'),
+                    width: 500,
+                  ),
+                ),
+                Center(
+                  child: Padding(
+                    padding:
+                        const EdgeInsets.only(bottom: 300, left: 50, right: 50),
+                    child: Text(
+                      "Obtuviste $score puntos",
+                      textAlign: TextAlign.center,
+                      style: new TextStyle(
+                        fontSize: 30.0,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.only(bottom: 75.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              Align(
+                alignment: Alignment.center,
+                child: ButtonTheme(
+                  minWidth: 200.0,
+                  height: 50.0,
+                  child: RaisedButton(
+                    onPressed: () {
+                      BlocProvider.of<AdventureBloc>(context)
+                          .add(StartEvent(casa: casa));
+                    },
+                    child: Text("Intentarlo de nuevo",
+                        style: Theme.of(context)
+                            .textTheme
+                            .bodyText1
+                            .copyWith(color: Colors.white)),
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 15.0),
+                child: Align(
+                  alignment: FractionalOffset.center,
+                  child: ButtonTheme(
+                    minWidth: 200.0,
+                    height: 50.0,
+                    child: RaisedButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: Text("Regresar al menu principal",
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyText1
+                              .copyWith(color: Colors.white)),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    ),
+  );
 }
 
 // ignore: non_constant_identifier_names
@@ -150,7 +257,7 @@ GestureDetector GestureAdventure(
     AdventureGestureState s, BuildContext context) {
   var initialX, initialY, distanceX, distanceY;
   var banX = true, banY = true;
-  var score = 100;
+  var score = 10;
   return GestureDetector(
     onTap: (() {
       //BlocProvider.of<AdventureBloc>(context).add(GestureEvent(3));
@@ -202,8 +309,8 @@ GestureDetector GestureAdventure(
       if (banX && banY && banFinalX && banFinalY) {
         ScaffoldMessenger.of(context)..hideCurrentSnackBar();
         BlocProvider.of<AdventureBloc>(context).add(GestureEvent(score));
-      } else if (score > 50) {
-        score -= 25;
+      } else if (score > 5) {
+        score -= 2;
         ScaffoldMessenger.of(context)
           ..hideCurrentSnackBar()
           ..showSnackBar(

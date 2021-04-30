@@ -52,8 +52,11 @@ class VersusAiAttackState extends VersusState {
 
 class VersusEndState extends VersusState {
   final bool winner;
-  VersusEndState({@required this.winner});
+  final String casa;
+  final int score;
+  VersusEndState(
+      {@required this.winner, @required this.casa, @required this.score});
 
   @override
-  List<Object> get props => [];
+  List<Object> get props => [winner, casa, score];
 }

@@ -4,11 +4,10 @@ import 'package:proyectoMoviles/Versus/versus.dart';
 import 'package:proyectoMoviles/others/leaderboard_page.dart';
 import 'package:proyectoMoviles/home/profile.dart';
 import 'package:proyectoMoviles/others/friends_page.dart';
-import 'package:proyectoMoviles/others/house_page.dart';
+import 'package:proyectoMoviles/others/house/house_page.dart';
 import 'package:proyectoMoviles/searchFriends/searchFriends.dart';
 import 'package:proyectoMoviles/utils/temp_friend_list.dart';
 import 'package:proyectoMoviles/utils/temp_leaderboard.dart';
-import 'package:proyectoMoviles/utils/temp_topics.dart';
 import '../adventure/adventure.dart';
 import '../quiz/question_page.dart';
 
@@ -45,7 +44,7 @@ class _PantallaPrincipalState extends State<PantallaPrincipal> {
     } else {
       isGoogle = true;
     }
-    casa = documentList.first.data()['casa'][0];
+    casa = documentList.first.data()['casa'];
     user = documentList.first.data();
   }
 
@@ -114,8 +113,7 @@ class _PantallaPrincipalState extends State<PantallaPrincipal> {
                       Navigator.of(context).push(
                         MaterialPageRoute(
                           builder: (context) {
-                            return HousePage(
-                                topicList: TopicRepository.loadTopic());
+                            return HousePage(casa: casa);
                           },
                         ),
                       );
@@ -269,7 +267,7 @@ class _PantallaPrincipalState extends State<PantallaPrincipal> {
       MaterialPageRoute(
         builder: (context) {
           return QuizPage(
-            casa: casa,
+            casa: casa[0],
           );
         },
       ),
@@ -281,7 +279,7 @@ class _PantallaPrincipalState extends State<PantallaPrincipal> {
       MaterialPageRoute(
         builder: (context) {
           return Adventure(
-            casa: casa,
+            casa: casa[0],
           );
         },
       ),
@@ -303,7 +301,7 @@ class _PantallaPrincipalState extends State<PantallaPrincipal> {
       MaterialPageRoute(
         builder: (context) {
           return Versus(
-            casa: casa,
+            casa: casa[0],
           );
         },
       ),

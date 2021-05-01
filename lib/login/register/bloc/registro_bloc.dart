@@ -31,7 +31,15 @@ class RegistroBloc extends Bloc<RegistroEvent, RegistroState> {
       _profilePic = await _getImage();
       yield PickedImageState(image: _profilePic);
     } else if (event is RegistroNormalEvent) {
-      bool yaExiste = await _searchDB(event.email);
+      String imageUrl = await _uploadFile();
+      if (imageUrl != null) {
+        await _saveUser(event.name, event.email, event.pass, event.casa,
+            event.patronus, event.varita, imageUrl);
+        yield UsuarioRegistradoState(email: event.email);
+      } else {
+        yield RegistroErrorState(errorMsg: "No se pudo guardar la imagen");
+      }
+      /*bool yaExiste = await _searchDB(event.email);
       if (yaExiste) {
         String imageUrl = await _uploadFile();
         if (imageUrl != null) {
@@ -43,7 +51,7 @@ class RegistroBloc extends Bloc<RegistroEvent, RegistroState> {
         }
       } else {
         yield YaExisteState();
-      }
+      }*/
     } else if (event is RegistroGoogleEvent) {
       await _googleRegistro();
       yield RegistroGoogleState(name: googleName, image: googleImage);

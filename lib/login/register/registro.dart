@@ -51,10 +51,11 @@ class _RegistroState extends State<Registro> {
                 if (state is PickedImageState) {
                   selectedImage = state.image;
                 }
-                if (state is YaExisteState) {
+                //TODO
+                /*if (state is YaExisteState) {
                   showSnacks("Ya existe un usuario con ese correo");
                   //volver a estado inicial
-                }
+                }*/
               },
               builder: (context, state) {
                 if (state is RegistroGoogleState) {

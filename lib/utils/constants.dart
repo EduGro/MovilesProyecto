@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 // home
 const String APP_TITLE = "HOGWARTS";
 // app
-const _redPrimaryValue = 0xFF800000;
+const _redPrimaryValue = 0xFF212121;
 const Color PRIMARY_COLOR = const MaterialColor(
   _redPrimaryValue,
   const <int, Color>{
@@ -36,3 +36,8 @@ const Color SECONDARY_COLOR = const MaterialColor(
     900: const Color(0xFFACACAB),
   },
 );
+
+const Color SLYTHERIN_COLOR = Color(0xFF1B5E20);
+const Color RAVENCLAW_COLOR = Color(0xFF01579B);
+const Color HUFFLEPUFF_COLOR = Color(0xFFFFD600);
+const Color GRYFFINDOR_COLOR = Color(0xFFB71C1C);

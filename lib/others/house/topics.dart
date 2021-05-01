@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:proyectoMoviles/utils/item_topic.dart';
 
 class topicItem extends StatefulWidget {
-  final itemTopic topic;
+  final Map<String, dynamic> topic;
   topicItem({
     Key key,
     @required this.topic,
@@ -26,7 +25,7 @@ class _topicItemState extends State<topicItem> {
             child: ListTile(
               title: Padding(
                 padding: EdgeInsets.only(bottom: 10.0),
-                child: Text("${topic.title}",
+                child: Text("${topic['title']}",
                   style: TextStyle(
                     fontSize: 30,
                     fontWeight: FontWeight.bold,
@@ -38,7 +37,7 @@ class _topicItemState extends State<topicItem> {
                   Row(
                     children: [
                       Icon(Icons.question_answer),
-                      Text("${topic.respuestas} Respuestas",
+                      Text("Respuestas",
                         style: TextStyle(
                           fontSize: 15,
                         ),
@@ -47,7 +46,7 @@ class _topicItemState extends State<topicItem> {
                   ),
                   Padding(
                   padding: EdgeInsets.only(top: 10.0),
-                  child: Text("${topic.first_post.substring(0, 50)}",
+                  child: Text("${topic['description']}", //TODO .substring(0, 50) checar longitud de desc
                       style: TextStyle(
                         fontSize: 18,
                       ),

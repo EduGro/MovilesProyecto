@@ -70,7 +70,7 @@ class _topicItemState extends State<topicItem> {
     Navigator.of(context).push(
       MaterialPageRoute(
         builder: (context) {
-          return TopicDetailsPage(title: widget.topic['title'], desc: widget.topic['description'], respuestas: widget.topic['respuestas'], fondo: widget.fondo,);
+          return TopicDetailsPage(title: widget.topic['title'], desc: widget.topic['description'], fondo: widget.fondo,);
         },
       ),
     );

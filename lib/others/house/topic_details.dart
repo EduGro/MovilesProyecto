@@ -1,15 +1,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class TopicDetailsPage extends StatefulWidget {
   final String title, desc;
   final Color fondo;
-  final List<dynamic> respuestas;
   TopicDetailsPage(
       {Key key,
       @required this.title,
       @required this.desc,
-      @required this.respuestas,
       @required this.fondo})
       : super(key: key);
 
@@ -18,6 +17,8 @@ class TopicDetailsPage extends StatefulWidget {
 }
 
 class TopicDetailsPageState extends State<TopicDetailsPage> {
+  List<dynamic> repliesList;
+  TextEditingController replyCont = new TextEditingController();
   var _scaffoldKey = GlobalKey<ScaffoldState>();
   @override
   Widget build(BuildContext context) {
@@ -74,36 +75,85 @@ class TopicDetailsPageState extends State<TopicDetailsPage> {
                     ],
                   ),
                 ),
-                SizedBox(
-                  height: MediaQuery.of(context).size.width * 1.2,
-                  child: ListView.builder(
-                    itemCount: widget.respuestas.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      return Card(
-                        child: Padding(
-                          padding: EdgeInsets.all(8.0),
-                          child: Text(
-                            widget.respuestas[index],
-                            style: TextStyle(
-                              fontSize: 15.0,
-                            ),
-                          ),
+                FutureBuilder(
+                  future: _getAnswers(),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasError) {
+                      return Center(
+                        child: Text("Algo salio mal",
+                            style:
+                                TextStyle(fontSize: 32, color: Colors.white)),
+                      );
+                    }
+                    if (snapshot.connectionState == ConnectionState.done &&
+                        snapshot.data.length == 0) {
+                      return Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Center(
+                          child: Text("Aún no hay respuestas",
+                              style:
+                                  TextStyle(fontSize: 32, color: Colors.white)),
                         ),
                       );
-                    },
-                  ),
+                    } else if (snapshot.hasData) {
+                      return SizedBox(
+                        height: MediaQuery.of(context).size.width * 1.2,
+                        child: ListView.builder(
+                          itemCount: repliesList.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            return Card(
+                              child: Padding(
+                                padding: EdgeInsets.all(8.0),
+                                child: Text(
+                                  repliesList[index],
+                                  style: TextStyle(
+                                    fontSize: 15.0,
+                                  ),
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                      );
+                    }
+                    return Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  },
                 ),
                 Padding(
                   padding: EdgeInsets.only(top: 15.0),
                   child: Card(
                     color: Colors.white,
                     child: TextField(
+                      controller: replyCont,
                       decoration: InputDecoration(
                         border: OutlineInputBorder(),
                         hintText: 'Agrega un comentario',
                         suffixIcon: IconButton(
                           icon: Icon(Icons.send),
-                          onPressed: () {},
+                          onPressed: () async {
+                            try {
+                              List<QueryDocumentSnapshot> documentList;
+                              documentList = await FirebaseFirestore.instance
+                                  .collection('forums')
+                                  .where("title", isEqualTo: widget.title)
+                                  .get()
+                                  .then((value) => value.docs);
+                              await FirebaseFirestore.instance
+                                  .collection('forums')
+                                  .doc(documentList.first.id)
+                                  .update({
+                                "respuestas": FieldValue.arrayUnion(
+                                    [replyCont.text as dynamic])
+                              });
+                            } catch (e) {
+                              throw e;
+                            }
+                            replyCont.text = '';
+                            await _getAnswers();
+                            setState(() {});
+                          },
                         ),
                       ),
                     ),
@@ -115,5 +165,16 @@ class TopicDetailsPageState extends State<TopicDetailsPage> {
         ),
       ),
     );
+  }
+
+  Future<List<dynamic>> _getAnswers() async {
+    List<QueryDocumentSnapshot> documentList;
+    documentList = await FirebaseFirestore.instance
+        .collection('forums')
+        .where('title', isEqualTo: widget.title)
+        .get()
+        .then((value) => value.docs);
+
+    return repliesList = documentList.first.data()['respuestas'];
   }
 }

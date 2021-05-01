@@ -16,12 +16,6 @@ class _HousePageState extends State<HousePage> {
   Color fondo;
 
   @override
-  void initState() {
-    _getTopics().then((t) => print('Async done'));
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
     if (widget.casa == 'Slytherin')
       fondo = SLYTHERIN_COLOR;
@@ -31,7 +25,7 @@ class _HousePageState extends State<HousePage> {
       fondo = HUFFLEPUFF_COLOR;
     else
       fondo = GRYFFINDOR_COLOR;
-    
+
     return Scaffold(
       appBar: AppBar(
         title: Center(child: Text(widget.casa)),
@@ -50,22 +44,12 @@ class _HousePageState extends State<HousePage> {
           builder: (context, snapshot) {
             if (snapshot.hasError) {
               return Center(
-                child: Text("Algo salio mal", style: TextStyle(fontSize: 32, color: Colors.white)),
+                child: Text("Algo salio mal",
+                    style: TextStyle(fontSize: 32, color: Colors.white)),
               );
             }
-            if (snapshot.hasData && snapshot.data.length > 0) {
-              return Padding(
-                padding: EdgeInsets.only(left: 10.0, right: 10.0),
-                child: ListView.builder(
-                  itemCount: topicsList.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    return topicItem(
-                      topic: topicsList[index],
-                    );
-                  },
-                ),
-              );
-            } else if (snapshot.data.length == 0) {
+            if (snapshot.connectionState == ConnectionState.done &&
+                snapshot.data.length == 0) {
               return Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: Center(
@@ -73,11 +57,23 @@ class _HousePageState extends State<HousePage> {
                       style: TextStyle(fontSize: 32, color: Colors.white)),
                 ),
               );
-            } else {
-              return Center(
-                child: CircularProgressIndicator(),
+            }else if (snapshot.hasData) {
+              return Padding(
+                padding: EdgeInsets.only(left: 10.0, right: 10.0),
+                child: ListView.builder(
+                  itemCount: topicsList.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return topicItem(
+                      topic: topicsList[index],
+                      fondo: fondo,
+                    );
+                  },
+                ),
               );
             }
+            return Center(
+              child: CircularProgressIndicator(),
+            );
           }),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
@@ -110,7 +106,8 @@ class _HousePageState extends State<HousePage> {
                             .add({
                           "casa": widget.casa[0],
                           "title": _title.text,
-                          "description": _desc.text
+                          "description": _desc.text,
+                          "respuestas": [],
                         });
                       } catch (e) {
                         throw e;
@@ -132,7 +129,7 @@ class _HousePageState extends State<HousePage> {
     );
   }
 
-  Future<void> _getTopics() async {
+  Future<List<Map<String, dynamic>>> _getTopics() async {
     List<QueryDocumentSnapshot> documentList;
     documentList = await FirebaseFirestore.instance
         .collection('forums')

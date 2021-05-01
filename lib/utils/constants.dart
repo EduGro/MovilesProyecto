@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 // home
 const String APP_TITLE = "HOGWARTS";
 // app
-const _redPrimaryValue = 0xFF212121;
+const _redPrimaryValue = 0xFF800000;
 const Color PRIMARY_COLOR = const MaterialColor(
   _redPrimaryValue,
   const <int, Color>{

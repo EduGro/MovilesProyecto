@@ -24,20 +24,36 @@ class _RegistroState extends State<Registro> {
   bool checkedValue = true;
   var _scaffoldKey = GlobalKey<ScaffoldState>();
   File selectedImage;
-  String _houseValue, _patronusValue, _wandValue;
+  String _houseValue, _patronusValue, _wandSize, _wandWood, _wandCore;
 
   List<String> patronus = [
-    "Gato",
-    "Perro",
-    "Serpiente",
-    "Ratón",
+    "Águila",
+    "Ardilla",
+    "Búho",
+    "Caballo",
+    "Ciervo",
+    "Cisne",
+    "Conejo",
     "Cuervo",
-    "Zorro",
-    "Venado",
-    "Lobo"
+    "Delfín",
+    "Elefante",
+    "Foca",
+    "Gato",
+    "León",
+    "Lobo",
+    "Murciélago",
+    "Nutria",
+    "Oso"
+    "Perro",
+    "Ratón",
+    "Salmón",
+    "Serpiente",
+    "Zorro"    
   ];
 
-  List<String> varitas = ["1", "2", "3", "4"];
+  List<String> varitas_size = ["9", "10", "11", "12", "13", "14"];
+  List<String> varitas_wood = ["arce", "caoba", "cerezo", "ciprés", "ébano", "espino", "fresno", "nogal", "olivo", "pino", "roble", "sauce"];
+  List<String> varitas_core = ["corazón de dragón", "pluma de fénix", "pelo de unicornio", "coral", "concha marina", "hueso", "pelo de kelpie", "cuerno de serpiente"];
 
   @override
   Widget build(BuildContext context) {
@@ -156,19 +172,79 @@ class _RegistroState extends State<Registro> {
                             Container(
                               color: Colors.white,
                               child: DropdownButton<String>(
-                                value: _wandValue,
-                                hint: Text("Varita"),
+                                value: _wandSize,
+                                hint: Text("Longitud"),
                                 icon: const Icon(Icons.arrow_drop_down),
                                 iconSize: 24,
                                 elevation: 16,
                                 style: const TextStyle(color: Colors.black),
                                 onChanged: (String newValue) {
                                   setState(() {
-                                    _wandValue = newValue;
+                                    _wandSize = newValue;
                                   });
                                 },
-                                items: varitas.map<DropdownMenuItem<String>>(
+                                items: varitas_size.map<DropdownMenuItem<String>>(
                                     (String value) {
+                                  return DropdownMenuItem<String>(
+                                    value: value,
+                                    child: Text(
+                                      value,
+                                      style: TextStyle(color: Colors.black),
+                                    ),
+                                  );
+                                }).toList(),
+                              ),
+                            ),
+                            SizedBox(
+                              width: 10.0,
+                            ),
+                            Container(
+                              color: Colors.white,
+                              child: DropdownButton<String>(
+                                value: _wandWood,
+                                hint: Text("Madera"),
+                                icon: const Icon(Icons.arrow_drop_down),
+                                iconSize: 24,
+                                elevation: 16,
+                                style: const TextStyle(color: Colors.black),
+                                onChanged: (String newValue) {
+                                  setState(() {
+                                    _wandWood = newValue;
+                                  });
+                                },
+                                items: varitas_wood
+                                    .map<DropdownMenuItem<String>>(
+                                        (String value) {
+                                  return DropdownMenuItem<String>(
+                                    value: value,
+                                    child: Text(
+                                      value,
+                                      style: TextStyle(color: Colors.black),
+                                    ),
+                                  );
+                                }).toList(),
+                              ),
+                            ),
+                            SizedBox(
+                              width: 10.0,
+                            ),
+                            Container(
+                              color: Colors.white,
+                              child: DropdownButton<String>(
+                                value: _wandCore,
+                                hint: Text("Núcleo"),
+                                icon: const Icon(Icons.arrow_drop_down),
+                                iconSize: 24,
+                                elevation: 16,
+                                style: const TextStyle(color: Colors.black),
+                                onChanged: (String newValue) {
+                                  setState(() {
+                                    _wandCore = newValue;
+                                  });
+                                },
+                                items: varitas_core
+                                    .map<DropdownMenuItem<String>>(
+                                        (String value) {
                                   return DropdownMenuItem<String>(
                                     value: value,
                                     child: Text(
@@ -197,13 +273,13 @@ class _RegistroState extends State<Registro> {
                             onPressed: () {
                               if (_houseValue == null ||
                                   _patronusValue == null ||
-                                  _wandValue == null) {
+                                  _wandSize == null || _wandWood == null || _wandCore == null) {
                                 showSnacks("Faltan algunos datos");
                               } else if (checkedValue) {
                                 BlocProvider.of<RegistroBloc>(context).add(
                                     RegistroFinalGoogleEvent(
                                         patronus: _patronusValue,
-                                        varita: _wandValue,
+                                        varita: "${_wandSize} pulgadas, madera de ${_wandWood}, núcleo de ${_wandCore}",
                                         casa: _houseValue));
                               }
                             },
@@ -394,23 +470,25 @@ class _RegistroState extends State<Registro> {
                           ),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
+                            mainAxisSize: MainAxisSize.min,
                             children: [
                               Container(
                                 color: Colors.white,
                                 child: DropdownButton<String>(
-                                  value: _wandValue,
-                                  hint: Text("Varita"),
+                                  value: _wandSize,
+                                  hint: Text("Longitud"),
                                   icon: const Icon(Icons.arrow_drop_down),
                                   iconSize: 24,
                                   elevation: 16,
                                   style: const TextStyle(color: Colors.black),
                                   onChanged: (String newValue) {
                                     setState(() {
-                                      _wandValue = newValue;
+                                      _wandSize = newValue;
                                     });
                                   },
-                                  items: varitas.map<DropdownMenuItem<String>>(
-                                      (String value) {
+                                  items: varitas_size
+                                      .map<DropdownMenuItem<String>>(
+                                          (String value) {
                                     return DropdownMenuItem<String>(
                                       value: value,
                                       child: Text(
@@ -421,6 +499,66 @@ class _RegistroState extends State<Registro> {
                                   }).toList(),
                                 ),
                               ),
+                              SizedBox(
+                                width: 10.0,
+                              ),
+                              Container(
+                                color: Colors.white,
+                                child: DropdownButton<String>(
+                                  value: _wandWood,
+                                  hint: Text("Madera"),
+                                  icon: const Icon(Icons.arrow_drop_down),
+                                  iconSize: 24,
+                                  elevation: 16,
+                                  style: const TextStyle(color: Colors.black),
+                                  onChanged: (String newValue) {
+                                    setState(() {
+                                      _wandWood = newValue;
+                                    });
+                                  },
+                                  items: varitas_wood
+                                      .map<DropdownMenuItem<String>>(
+                                          (String value) {
+                                    return DropdownMenuItem<String>(
+                                      value: value,
+                                      child: Text(
+                                        value,
+                                        style: TextStyle(color: Colors.black),
+                                      ),
+                                    );
+                                  }).toList(),
+                                ),
+                              ),
+                              SizedBox(
+                                width: 10.0,
+                              ),
+                              Container(
+                              color: Colors.white,
+                              child: DropdownButton<String>(
+                                value: _wandCore,
+                                hint: Text("Núcleo"),
+                                icon: const Icon(Icons.arrow_drop_down),
+                                iconSize: 24,
+                                elevation: 16,
+                                style: const TextStyle(color: Colors.black),
+                                onChanged: (String newValue) {
+                                  setState(() {
+                                    _wandCore = newValue;
+                                  });
+                                },
+                                items: varitas_core
+                                    .map<DropdownMenuItem<String>>(
+                                        (String value) {
+                                  return DropdownMenuItem<String>(
+                                    value: value,
+                                    child: Text(
+                                      value,
+                                      style: TextStyle(color: Colors.black),
+                                    ),
+                                  );
+                                }).toList(),
+                              ),
+                            ),
                             ],
                           ),
                           Container(
@@ -445,7 +583,8 @@ class _RegistroState extends State<Registro> {
                                     name == "" ||
                                     _houseValue == null ||
                                     _patronusValue == null ||
-                                    _wandValue == null) {
+                                    _wandSize == null ||
+                                    _wandWood == null || _wandCore == null) {
                                   showSnacks("Faltan algunos datos");
                                 } else if (checkedValue) {
                                   BlocProvider.of<RegistroBloc>(context).add(
@@ -454,7 +593,7 @@ class _RegistroState extends State<Registro> {
                                           pass: pass,
                                           email: email,
                                           patronus: _patronusValue,
-                                          varita: _wandValue,
+                                          varita: "${_wandSize} pulgadas, madera de ${_wandWood}, núcleo de ${_wandCore}",
                                           casa: _houseValue));
                                 }
                               },

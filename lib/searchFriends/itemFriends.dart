@@ -1,31 +1,84 @@
 import 'package:flutter/material.dart';
+import 'package:proyectoMoviles/searchFriends/bloc/search_bloc.dart';
 import 'package:proyectoMoviles/utils/item_friends.dart';
 
-class ItemsFriends extends StatelessWidget {
+class ItemsFriends extends StatefulWidget {
   final itemFriends friend;
-  ItemsFriends({Key key, @required this.friend}) : super(key: key);
+  final user;
 
+  ItemsFriends({Key key, @required this.friend, @required this.user})
+      : super(key: key);
+
+  @override
+  _itemFriendsState createState() => _itemFriendsState();
+}
+
+// ignore: camel_case_types
+class _itemFriendsState extends State<ItemsFriends> {
   String text = '';
   String subject = '';
   List<String> imagePaths = [];
+  IconData ico1 = Icons.person_add_disabled;
+  IconData ico2 = Icons.person_add;
+  IconData ico3 = Icons.person_remove;
 
   @override
   Widget build(BuildContext context) {
+    int ban = widget.friend.isAmigo;
+
     return Container(
       child: Padding(
-        padding: EdgeInsets.all(6.0),
+        padding: EdgeInsets.only(left: 6.0, right: 6.0),
         child: Card(
           child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Expanded(
-                flex: 1,
+                flex: 0,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text("I suck ${friend.name}"),
+                    Image.network(
+                      "${widget.friend.profilePic}",
+                      height: 75,
+                      width: 75,
+                      fit: BoxFit.fitHeight,
+                    ),
                   ],
                 ),
               ),
+              Padding(
+                padding: const EdgeInsets.only(left: 10.0),
+                child: Text(
+                  widget.friend.name,
+                  style: TextStyle(
+                    fontWeight: FontWeight.w900,
+                    fontSize: 14,
+                  ),
+                ),
+              ),
+              Spacer(),
+              Padding(
+                padding: const EdgeInsets.only(right: 16.0),
+                child: Image(
+                  image:
+                      AssetImage('assets/PropShield${widget.friend.casa}.png'),
+                  width: 50,
+                ),
+              ),
+              IconButton(
+                  icon: Icon(ban == 0
+                      ? ico1
+                      : ban == 1
+                          ? ico2
+                          : ico3),
+                  onPressed: () async {
+                    if (ban == 0) {
+                      SearchBloc().addUser(widget.friend.id, widget.user);
+                    } else if (ban == 2) {
+                      SearchBloc().deleteUser(widget.friend.id, widget.user);
+                    }
+                  })
             ],
           ),
         ),

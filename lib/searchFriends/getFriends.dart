@@ -2,54 +2,29 @@ import 'package:flutter/material.dart';
 import 'package:proyectoMoviles/searchFriends/bloc/search_bloc.dart';
 import 'package:proyectoMoviles/searchFriends/itemFriends.dart';
 
-class SearchFriends extends StatefulWidget {
+// ignore: camel_case_types
+class getFriends extends StatefulWidget {
   final user;
-  SearchFriends({Key key, @required this.user}) : super(key: key);
+  getFriends({Key key, @required this.user}) : super(key: key);
 
   @override
-  _SearchFriendsState createState() => _SearchFriendsState();
+  _getFriendsState createState() => _getFriendsState();
 }
 
-class _SearchFriendsState extends State<SearchFriends> {
-  var _controller = TextEditingController();
-  var query;
+// ignore: camel_case_types
+class _getFriendsState extends State<getFriends> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Buscar amigos"),
+        title: Text("Mis amigos"),
       ),
       body: Stack(
         children: [
-          Material(
-            child: TextField(
-              textInputAction: TextInputAction.search,
-              controller: _controller,
-              onSubmitted: (value) {
-                query = value;
-                setState(() {});
-              },
-              decoration: InputDecoration(
-                fillColor: Colors.green[100],
-                filled: true,
-                border: InputBorder.none,
-                prefixIcon: IconButton(
-                  onPressed: () {},
-                  icon: Icon(Icons.search),
-                ),
-                suffixIcon: IconButton(
-                  onPressed: _controller.clear,
-                  icon: Icon(Icons.clear),
-                ),
-                hintText: 'Search ',
-                contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-              ),
-            ),
-          ),
           Padding(
-            padding: const EdgeInsets.only(top: 50),
+            padding: const EdgeInsets.only(top: 10),
             child: FutureBuilder(
-              future: SearchBloc().getFriends(query, widget.user["amigos"]),
+              future: SearchBloc().addedFriends(widget.user["amigos"]),
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
                   return ListView.builder(

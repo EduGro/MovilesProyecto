@@ -4,9 +4,9 @@ import 'package:proyectoMoviles/Versus/versus.dart';
 import 'package:proyectoMoviles/others/leaderboard_page.dart';
 import 'package:proyectoMoviles/home/profile.dart';
 import 'package:proyectoMoviles/others/friends_page.dart';
+import 'package:proyectoMoviles/searchFriends/getFriends.dart';
 import 'package:proyectoMoviles/others/house/house_page.dart';
 import 'package:proyectoMoviles/searchFriends/searchFriends.dart';
-import 'package:proyectoMoviles/utils/temp_friend_list.dart';
 import 'package:proyectoMoviles/utils/temp_leaderboard.dart';
 import '../adventure/adventure.dart';
 import '../quiz/question_page.dart';
@@ -290,7 +290,7 @@ class _PantallaPrincipalState extends State<PantallaPrincipal> {
     Navigator.of(context).push(
       MaterialPageRoute(
         builder: (context) {
-          return SearchFriends();
+          return SearchFriends(user: user);
         },
       ),
     );
@@ -312,7 +312,7 @@ class _PantallaPrincipalState extends State<PantallaPrincipal> {
     Navigator.of(context).push(
       MaterialPageRoute(
         builder: (context) {
-          return FriendsPage(friendsList: FriendRepository.loadFriends());
+          return getFriends(user: user);
         },
       ),
     );

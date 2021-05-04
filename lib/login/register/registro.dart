@@ -44,16 +44,48 @@ class _RegistroState extends State<Registro> {
     "Murciélago",
     "Nutria",
     "Oso"
-    "Perro",
+        "Perro",
     "Ratón",
     "Salmón",
     "Serpiente",
-    "Zorro"    
+    "Zorro"
   ];
 
   List<String> varitas_size = ["9", "10", "11", "12", "13", "14"];
-  List<String> varitas_wood = ["arce", "caoba", "cerezo", "ciprés", "ébano", "espino", "fresno", "nogal", "olivo", "pino", "roble", "sauce"];
-  List<String> varitas_core = ["corazón de dragón", "pluma de fénix", "pelo de unicornio", "coral", "concha marina", "hueso", "pelo de kelpie", "cuerno de serpiente"];
+  List<String> varitas_wood = [
+    "arce",
+    "caoba",
+    "cerezo",
+    "ciprés",
+    "ébano",
+    "espino",
+    "fresno",
+    "nogal",
+    "olivo",
+    "pino",
+    "roble",
+    "sauce"
+  ];
+  List<String> varitas_core = [
+    "corazón de dragón",
+    "pluma de fénix",
+    "pelo de unicornio",
+    "coral",
+    "concha marina",
+    "hueso",
+    "pelo de kelpie",
+    "cuerno de serpiente"
+  ];
+
+  void showSnacks(String text) {
+    _scaffoldKey.currentState
+      ..hideCurrentSnackBar()
+      ..showSnackBar(
+        SnackBar(
+          content: Text(text),
+        ),
+      );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -67,11 +99,9 @@ class _RegistroState extends State<Registro> {
                 if (state is PickedImageState) {
                   selectedImage = state.image;
                 }
-                //TODO
-                /*if (state is YaExisteState) {
+                if (state is YaExisteState) {
                   showSnacks("Ya existe un usuario con ese correo");
-                  //volver a estado inicial
-                }*/
+                }
               },
               builder: (context, state) {
                 if (state is RegistroGoogleState) {
@@ -183,8 +213,9 @@ class _RegistroState extends State<Registro> {
                                     _wandSize = newValue;
                                   });
                                 },
-                                items: varitas_size.map<DropdownMenuItem<String>>(
-                                    (String value) {
+                                items: varitas_size
+                                    .map<DropdownMenuItem<String>>(
+                                        (String value) {
                                   return DropdownMenuItem<String>(
                                     value: value,
                                     child: Text(
@@ -273,13 +304,16 @@ class _RegistroState extends State<Registro> {
                             onPressed: () {
                               if (_houseValue == null ||
                                   _patronusValue == null ||
-                                  _wandSize == null || _wandWood == null || _wandCore == null) {
+                                  _wandSize == null ||
+                                  _wandWood == null ||
+                                  _wandCore == null) {
                                 showSnacks("Faltan algunos datos");
                               } else if (checkedValue) {
                                 BlocProvider.of<RegistroBloc>(context).add(
                                     RegistroFinalGoogleEvent(
                                         patronus: _patronusValue,
-                                        varita: "${_wandSize} pulgadas, madera de ${_wandWood}, núcleo de ${_wandCore}",
+                                        varita:
+                                            "${_wandSize} pulgadas, madera de ${_wandWood}, núcleo de ${_wandCore}",
                                         casa: _houseValue));
                               }
                             },
@@ -533,32 +567,32 @@ class _RegistroState extends State<Registro> {
                                 width: 10.0,
                               ),
                               Container(
-                              color: Colors.white,
-                              child: DropdownButton<String>(
-                                value: _wandCore,
-                                hint: Text("Núcleo"),
-                                icon: const Icon(Icons.arrow_drop_down),
-                                iconSize: 24,
-                                elevation: 16,
-                                style: const TextStyle(color: Colors.black),
-                                onChanged: (String newValue) {
-                                  setState(() {
-                                    _wandCore = newValue;
-                                  });
-                                },
-                                items: varitas_core
-                                    .map<DropdownMenuItem<String>>(
-                                        (String value) {
-                                  return DropdownMenuItem<String>(
-                                    value: value,
-                                    child: Text(
-                                      value,
-                                      style: TextStyle(color: Colors.black),
-                                    ),
-                                  );
-                                }).toList(),
+                                color: Colors.white,
+                                child: DropdownButton<String>(
+                                  value: _wandCore,
+                                  hint: Text("Núcleo"),
+                                  icon: const Icon(Icons.arrow_drop_down),
+                                  iconSize: 24,
+                                  elevation: 16,
+                                  style: const TextStyle(color: Colors.black),
+                                  onChanged: (String newValue) {
+                                    setState(() {
+                                      _wandCore = newValue;
+                                    });
+                                  },
+                                  items: varitas_core
+                                      .map<DropdownMenuItem<String>>(
+                                          (String value) {
+                                    return DropdownMenuItem<String>(
+                                      value: value,
+                                      child: Text(
+                                        value,
+                                        style: TextStyle(color: Colors.black),
+                                      ),
+                                    );
+                                  }).toList(),
+                                ),
                               ),
-                            ),
                             ],
                           ),
                           Container(
@@ -584,7 +618,8 @@ class _RegistroState extends State<Registro> {
                                     _houseValue == null ||
                                     _patronusValue == null ||
                                     _wandSize == null ||
-                                    _wandWood == null || _wandCore == null) {
+                                    _wandWood == null ||
+                                    _wandCore == null) {
                                   showSnacks("Faltan algunos datos");
                                 } else if (checkedValue) {
                                   BlocProvider.of<RegistroBloc>(context).add(
@@ -593,7 +628,8 @@ class _RegistroState extends State<Registro> {
                                           pass: pass,
                                           email: email,
                                           patronus: _patronusValue,
-                                          varita: "${_wandSize} pulgadas, madera de ${_wandWood}, núcleo de ${_wandCore}",
+                                          varita:
+                                              "${_wandSize} pulgadas, madera de ${_wandWood}, núcleo de ${_wandCore}",
                                           casa: _houseValue));
                                 }
                               },
@@ -653,14 +689,4 @@ class _RegistroState extends State<Registro> {
               },
             )));
   }
-
-  void showSnacks(String text) {
-      _scaffoldKey.currentState
-        ..hideCurrentSnackBar()
-        ..showSnackBar(
-          SnackBar(
-            content: Text(text),
-          ),
-        );
-    }
 }

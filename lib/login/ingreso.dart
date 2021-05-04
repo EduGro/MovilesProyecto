@@ -39,8 +39,7 @@ class _IngresoState extends State<Ingreso> {
         key: _scaffoldKey,
         body: BlocProvider(
             create: (context) => LoginBloc(),
-            child:
-                BlocConsumer<LoginBloc, LoginState>(listener: (context, state) {
+            child: BlocConsumer<LoginBloc, LoginState>(listener: (context, state) {
               if (state is NoExisteState) {
                 showSnacks("Aun no se encuentra registrado");
               }
@@ -49,9 +48,7 @@ class _IngresoState extends State<Ingreso> {
                 return PantallaPrincipal(
                   userEmail: state.email,
                 );
-              } /*else if (state is NoExisteState) {
-                return showSnacks("");
-              }*/ else {
+              } else {
                 return Center(
                   child: SingleChildScrollView(
                     child: Column(

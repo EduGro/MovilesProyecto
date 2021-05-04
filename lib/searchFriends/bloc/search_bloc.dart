@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:proyectoMoviles/utils/item_friends.dart';
 
 part 'search_event.dart';
@@ -18,6 +19,16 @@ class uniqueUser {
     this.name,
     this.id,
     this.amigos,
+  });
+}
+
+class uniqueUserNoFriends {
+  String name;
+  String id;
+
+  uniqueUserNoFriends({
+    this.name,
+    this.id,
   });
 }
 
@@ -130,23 +141,41 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
           .where("image", isEqualTo: user['image'])
           .where("email", isEqualTo: user['email'])
           .get();
-      var list = unique.docs
-          .map(
-            (element) => uniqueUser(
-              name: element["name"],
-              id: element.id,
-              amigos: element["amigos"],
-            ),
-          )
-          .toList();
       DocumentReference toPass = await _cFirestore.collection('users').doc(id);
-      if (list[0].amigos.contains(toPass)) return true;
-      list[0].amigos.add(toPass);
-      var unique2 = await _cFirestore
-          .collection('users')
-          .doc(list[0].id)
-          .update({'amigos': list[0].amigos});
-      return true;
+      if (unique.docs.contains("amigos")) {
+        var list = unique.docs
+            .map(
+              (element) => uniqueUser(
+                name: element["name"],
+                id: element.id,
+                amigos: element["amigos"] != null ? element["amigos"] : null,
+              ),
+            )
+            .toList();
+
+        if (list[0].amigos.contains(toPass)) return true;
+        list[0].amigos.add(toPass);
+        var unique2 = await _cFirestore
+            .collection('users')
+            .doc(list[0].id)
+            .update({'amigos': list[0].amigos});
+      } else {
+        var list = unique.docs
+            .map(
+              (element) => uniqueUserNoFriends(
+                name: element["name"],
+                id: element.id,
+              ),
+            )
+            .toList();
+        List<DocumentReference> list2 = [];
+        list2.add(toPass);
+        var unique2 = await _cFirestore
+            .collection('users')
+            .doc(list[0].id)
+            .update({'amigos': list2});
+        return true;
+      }
     } catch (e) {
       print("Error: $e");
       return false;
@@ -164,7 +193,6 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
                 24,
                 (amigosArray[i].toString().length - 1),
               );
-          print(temp);
           DocumentSnapshot element =
               await _cFirestore.collection('users').doc(temp).get();
           friendsList.add(

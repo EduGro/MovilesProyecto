@@ -73,10 +73,48 @@ class _itemFriendsState extends State<ItemsFriends> {
                           ? ico2
                           : ico3),
                   onPressed: () async {
-                    if (ban == 0) {
-                      SearchBloc().addUser(widget.friend.id, widget.user);
+                    if (ban == 1) {
+                      bool ban1 = await SearchBloc()
+                          .addUser(widget.friend.id, widget.user);
+                      if (ban1) {
+                        ScaffoldMessenger.of(context)
+                          ..hideCurrentSnackBar()
+                          ..showSnackBar(
+                            SnackBar(
+                              content: Text("Amigo agregado"),
+                            ),
+                          );
+                      } else {
+                        ScaffoldMessenger.of(context)
+                          ..hideCurrentSnackBar()
+                          ..showSnackBar(
+                            SnackBar(
+                              content:
+                                  Text("Surgio un error intentelo mas tarde"),
+                            ),
+                          );
+                      }
                     } else if (ban == 2) {
-                      SearchBloc().deleteUser(widget.friend.id, widget.user);
+                      bool ban1 = await SearchBloc()
+                          .deleteUser(widget.friend.id, widget.user);
+                      if (ban1) {
+                        ScaffoldMessenger.of(context)
+                          ..hideCurrentSnackBar()
+                          ..showSnackBar(
+                            SnackBar(
+                              content: Text("Amigo removido"),
+                            ),
+                          );
+                      } else {
+                        ScaffoldMessenger.of(context)
+                          ..hideCurrentSnackBar()
+                          ..showSnackBar(
+                            SnackBar(
+                              content:
+                                  Text("Surgio un error intentelo mas tarde"),
+                            ),
+                          );
+                      }
                     }
                   })
             ],

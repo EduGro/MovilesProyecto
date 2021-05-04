@@ -11,11 +11,12 @@ class InitialEvent extends QuizEvent {}
 
 class NextQuestionEvent extends QuizEvent {
   final bool fueCorrecta;
+  final bool first;
 
-  NextQuestionEvent({@required this.fueCorrecta});
+  NextQuestionEvent({@required this.fueCorrecta, @required this.first});
 
   @override
-  List<Object> get props => [fueCorrecta];
+  List<Object> get props => [fueCorrecta, first];
 }
 
 class EndQuizEvent extends QuizEvent {

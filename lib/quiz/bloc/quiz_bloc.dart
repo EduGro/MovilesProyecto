@@ -4,6 +4,7 @@ import 'dart:math';
 import 'package:bloc/bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:meta/meta.dart';
 
 part 'quiz_event.dart';
@@ -28,17 +29,27 @@ class QuizBloc extends Bloc<QuizEvent, QuizState> {
       max = list.length;
       i = min + rnd.nextInt(max - min);
     } else if (event is NextQuestionEvent) {
-      if (event.fueCorrecta) {
-        score += 10;
+      if (!event.first) {
+        list.remove(list[i]);
       }
-      i = min + rnd.nextInt(max - min);
-      yield QuestionLoadedState(
-          score: score,
-          correcta: list[i]['respuesta'],
-          pregunta: list[i]['pregunta'],
-          resp: list[i]['posiblesRespuestas']);
+      if (list.length == 0) {
+        print("object");
+        yield EndQuizState(score: score);
+      } else {
+        if (event.fueCorrecta) {
+          score += 10;
+        }
+        max = list.length;
+        i = min + rnd.nextInt(max - min);
+        yield QuestionLoadedState(
+            score: score,
+            correcta: list[i]['respuesta'],
+            pregunta: list[i]['pregunta'],
+            resp: list[i]['posiblesRespuestas']);
+      }      
     } else if (event is EndQuizEvent) {
       await _updateScore(event.casa);
+      yield EndQuizState(score: score);
     }
   }
 

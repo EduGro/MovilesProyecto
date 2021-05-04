@@ -23,7 +23,7 @@ class _QuizPageState extends State<QuizPage> {
         body: BlocProvider(
             create: (context) => QuizBloc()
               ..add(InitialEvent())
-              ..add(NextQuestionEvent(fueCorrecta: false)),
+              ..add(NextQuestionEvent(fueCorrecta: false, first: true)),
             child: BlocConsumer<QuizBloc, QuizState>(
               listener: (context, state) {
                 // TODO: implement listener
@@ -79,7 +79,8 @@ class _QuizPageState extends State<QuizPage> {
                                           state.resp[3], state.correcta);
                                       BlocProvider.of<QuizBloc>(context).add(
                                           NextQuestionEvent(
-                                              fueCorrecta: checkAnswer));
+                                              fueCorrecta: checkAnswer,
+                                              first: false));
                                     }),
                               ),
                             ],
@@ -108,7 +109,8 @@ class _QuizPageState extends State<QuizPage> {
                                           state.resp[0], state.correcta);
                                       BlocProvider.of<QuizBloc>(context).add(
                                           NextQuestionEvent(
-                                              fueCorrecta: checkAnswer));
+                                              fueCorrecta: checkAnswer,
+                                              first: false));
                                     }),
                               ),
                             ],
@@ -137,7 +139,8 @@ class _QuizPageState extends State<QuizPage> {
                                           state.resp[2], state.correcta);
                                       BlocProvider.of<QuizBloc>(context).add(
                                           NextQuestionEvent(
-                                              fueCorrecta: checkAnswer));
+                                              fueCorrecta: checkAnswer,
+                                              first: false));
                                     }),
                               ),
                             ],
@@ -166,7 +169,8 @@ class _QuizPageState extends State<QuizPage> {
                                           state.resp[1], state.correcta);
                                       BlocProvider.of<QuizBloc>(context).add(
                                           NextQuestionEvent(
-                                              fueCorrecta: checkAnswer));
+                                              fueCorrecta: checkAnswer,
+                                              first: false));
                                     }),
                               ),
                             ],
@@ -195,13 +199,14 @@ class _QuizPageState extends State<QuizPage> {
                               ),
                             ),
                             onPressed: () {
-                              BlocProvider.of<QuizBloc>(context).add(
-                                  EndQuizEvent(casa: widget.casa));
-                              Navigator.of(context).pop();
+                              BlocProvider.of<QuizBloc>(context)
+                                  .add(EndQuizEvent(casa: widget.casa));
                             }),
                       ],
                     ),
                   );
+                } else if (state is EndQuizState) {
+                  return _endDialog(state.score);
                 } else {
                   return Center(child: CircularProgressIndicator());
                 }
@@ -211,5 +216,39 @@ class _QuizPageState extends State<QuizPage> {
 
   bool _checkAnswer(String resp, String correcta) {
     return resp == correcta;
+  }
+
+  Widget _endDialog(int score) {
+    return AlertDialog(
+      title: Text('Terminaste esta ronda'),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text("¡Felicidades!", 
+            style: TextStyle(
+              fontSize: 25.0,
+            ),
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          Text("Ganaste ${score} puntos",
+            style: TextStyle(
+              fontSize: 20.0,
+            ),
+          ),
+        ],
+      ),
+      actions: <Widget>[
+        Center(
+          child: MaterialButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: Text('Salir'),
+          ),
+        ),
+      ],
+    );
   }
 }

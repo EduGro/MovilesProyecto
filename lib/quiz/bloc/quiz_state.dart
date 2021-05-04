@@ -19,3 +19,11 @@ class QuestionLoadedState extends QuizState {
   @override
   List<Object> get props => [pregunta, score, resp, correcta];
 }
+
+class EndQuizState extends QuizState {
+  final int score;
+
+  EndQuizState({@required this.score});
+  @override
+  List<Object> get props => [score];
+}

@@ -153,7 +153,7 @@ class RegistroBloc extends Bloc<RegistroEvent, RegistroState> {
         .get()
         .then((value) => value.docs);
 
-    if (documentList.length > 1) {
+    if (documentList.length >= 1) {
       return true;
     } else {
       return false;

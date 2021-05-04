@@ -18,3 +18,5 @@ class EntrarSuccessState extends LoginState {
   @override
   List<Object> get props => [email];
 }
+
+class NoExisteState extends LoginState {}

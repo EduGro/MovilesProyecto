@@ -21,6 +21,9 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
   ) async* {
     if (event is EntrarEvent) {
       String cont = await _searchDB(event.email, event.pass);
+      if (cont == null) {
+        yield NoExisteState();
+      }
       if (event.pass == cont) {
         yield EntrarSuccessState(email: event.email);
       }
@@ -42,7 +45,8 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
         .then((value) => value.docs);
 
     String pass;
-    if (documentList.length > 1 || documentList.length < 0) {
+
+    if (documentList.length > 1 || documentList.length <= 0) {
       pass = null;
     } else {
       pass = documentList.first.get("password");

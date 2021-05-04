@@ -41,13 +41,17 @@ class _IngresoState extends State<Ingreso> {
             create: (context) => LoginBloc(),
             child:
                 BlocConsumer<LoginBloc, LoginState>(listener: (context, state) {
-              // TODO: implement listener
+              if (state is NoExisteState) {
+                showSnacks("Aun no se encuentra registrado");
+              }
             }, builder: (context, state) {
               if (state is EntrarSuccessState) {
                 return PantallaPrincipal(
                   userEmail: state.email,
                 );
-              } else {
+              } /*else if (state is NoExisteState) {
+                return showSnacks("");
+              }*/ else {
                 return Center(
                   child: SingleChildScrollView(
                     child: Column(

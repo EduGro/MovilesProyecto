@@ -35,7 +35,8 @@ class _itemFriendsState extends State<ItemsFriends> {
             MaterialPageRoute(
               builder: (context) {
                 return FriendDetails(
-                  user: widget.friend,
+                  friend: widget.friend,
+                  user: widget.user,
                 );
               },
             ),

@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:proyectoMoviles/searchFriends/bloc/search_bloc.dart';
 import 'package:proyectoMoviles/utils/item_friends.dart';
 
 class FriendDetails extends StatefulWidget {
-  final itemFriends user;
-  FriendDetails({Key key, @required this.user}) : super(key: key);
+  final itemFriends friend;
+  final user;
+  FriendDetails({Key key, @required this.friend, @required this.user})
+      : super(key: key);
 
   @override
   _FriendDetailsState createState() => _FriendDetailsState();
@@ -13,7 +16,7 @@ class _FriendDetailsState extends State<FriendDetails> {
   String text;
   @override
   Widget build(BuildContext context) {
-    text = widget.user.isAmigo == 1 ? "Agregar amigo" : "Remover Amigo";
+    text = widget.friend.isAmigo == 1 ? "Agregar amigo" : "Remover Amigo";
     return Scaffold(
       appBar: AppBar(
         /*leading: IconButton(
@@ -21,7 +24,7 @@ class _FriendDetailsState extends State<FriendDetails> {
           onPressed: () {},
         ),*/
         centerTitle: true,
-        title: Text(widget.user.name),
+        title: Text(widget.friend.name),
         actions: <Widget>[
           IconButton(
             icon: const Icon(Icons.settings),
@@ -33,7 +36,7 @@ class _FriendDetailsState extends State<FriendDetails> {
       body: Container(
         decoration: BoxDecoration(
           image: DecorationImage(
-            image: AssetImage('assets/Bkgn${widget.user.casa}UserLarge.jpg'),
+            image: AssetImage('assets/Bkgn${widget.friend.casa}UserLarge.jpg'),
             fit: BoxFit.cover,
           ),
         ),
@@ -47,8 +50,8 @@ class _FriendDetailsState extends State<FriendDetails> {
                   Container(
                     height: 150,
                     child: CircleAvatar(
-                      backgroundImage: widget.user.profilePic != null
-                          ? NetworkImage(widget.user.profilePic)
+                      backgroundImage: widget.friend.profilePic != null
+                          ? NetworkImage(widget.friend.profilePic)
                           : NetworkImage(
                               "https://mastodon.sdf.org/system/accounts/avatars/000/108/313/original/035ab20c290d3722.png"),
                       minRadius: 20,
@@ -59,7 +62,7 @@ class _FriendDetailsState extends State<FriendDetails> {
                     height: 20,
                   ),
                   Text(
-                    widget.user.name,
+                    widget.friend.name,
                     style: Theme.of(context)
                         .textTheme
                         .headline3
@@ -69,7 +72,7 @@ class _FriendDetailsState extends State<FriendDetails> {
                   SizedBox(
                     height: 20,
                   ),
-                  Text(
+                  /*Text(
                     "", //widget.user.name,
                     style: Theme.of(context)
                         .textTheme
@@ -79,7 +82,7 @@ class _FriendDetailsState extends State<FriendDetails> {
                   ),
                   SizedBox(
                     height: 20,
-                  ),
+                  ),*/
                   Text(
                     "Casa",
                     style: Theme.of(context)
@@ -92,7 +95,7 @@ class _FriendDetailsState extends State<FriendDetails> {
                     height: 10,
                   ),
                   Text(
-                    widget.user.casa,
+                    widget.friend.casa,
                     style: Theme.of(context)
                         .textTheme
                         .headline6
@@ -114,7 +117,7 @@ class _FriendDetailsState extends State<FriendDetails> {
                     image: AssetImage('assets/PropWand.png'),
                   ),
                   Text(
-                    widget.user.varita,
+                    widget.friend.varita,
                     style: Theme.of(context)
                         .textTheme
                         .headline6
@@ -136,7 +139,7 @@ class _FriendDetailsState extends State<FriendDetails> {
                     height: 10,
                   ),
                   Text(
-                    widget.user.patronus,
+                    widget.friend.patronus,
                     style: Theme.of(context)
                         .textTheme
                         .headline6
@@ -163,7 +166,51 @@ class _FriendDetailsState extends State<FriendDetails> {
                         ),
                       ),
                       height: 40,
-                      onPressed: () async {},
+                      onPressed: () async {
+                        if (widget.friend.isAmigo == 1) {
+                          bool ban1 = await SearchBloc()
+                              .addUser(widget.friend.id, widget.user);
+                          if (ban1) {
+                            ScaffoldMessenger.of(context)
+                              ..hideCurrentSnackBar()
+                              ..showSnackBar(
+                                SnackBar(
+                                  content: Text("Amigo agregado"),
+                                ),
+                              );
+                          } else {
+                            ScaffoldMessenger.of(context)
+                              ..hideCurrentSnackBar()
+                              ..showSnackBar(
+                                SnackBar(
+                                  content: Text(
+                                      "Surgio un error intentelo mas tarde"),
+                                ),
+                              );
+                          }
+                        } else {
+                          bool ban1 = await SearchBloc()
+                              .deleteUser(widget.friend.id, widget.user);
+                          if (ban1) {
+                            ScaffoldMessenger.of(context)
+                              ..hideCurrentSnackBar()
+                              ..showSnackBar(
+                                SnackBar(
+                                  content: Text("Amigo removido"),
+                                ),
+                              );
+                          } else {
+                            ScaffoldMessenger.of(context)
+                              ..hideCurrentSnackBar()
+                              ..showSnackBar(
+                                SnackBar(
+                                  content: Text(
+                                      "Surgio un error intentelo mas tarde"),
+                                ),
+                              );
+                          }
+                        }
+                      },
                     ),
                   ],
                 ),

@@ -4,11 +4,8 @@ import 'package:proyectoMoviles/others/house/topic_details.dart';
 class topicItem extends StatefulWidget {
   final Map<String, dynamic> topic;
   final Color fondo;
-  topicItem({
-    Key key,
-    @required this.topic,
-    @required this.fondo
-  }) : super(key: key);
+  topicItem({Key key, @required this.topic, @required this.fondo})
+      : super(key: key);
 
   @override
   _topicItemState createState() => _topicItemState();
@@ -18,6 +15,7 @@ class _topicItemState extends State<topicItem> {
   @override
   Widget build(BuildContext context) {
     var topic = widget.topic;
+    print(widget.topic['id']);
     return Padding(
       padding: EdgeInsets.only(bottom: 10.0, top: 10.0),
       child: Container(
@@ -70,7 +68,12 @@ class _topicItemState extends State<topicItem> {
     Navigator.of(context).push(
       MaterialPageRoute(
         builder: (context) {
-          return TopicDetailsPage(title: widget.topic['title'], desc: widget.topic['description'], fondo: widget.fondo,);
+          return TopicDetailsPage(
+            title: widget.topic['title'],
+            desc: widget.topic['description'],
+            doc_id: widget.topic['id'],
+            fondo: widget.fondo,
+          );
         },
       ),
     );

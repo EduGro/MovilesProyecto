@@ -19,19 +19,8 @@ class _FriendDetailsState extends State<FriendDetails> {
     text = widget.friend.isAmigo == 1 ? "Agregar amigo" : "Remover Amigo";
     return Scaffold(
       appBar: AppBar(
-        /*leading: IconButton(
-          icon: Icon(Icons.person),
-          onPressed: () {},
-        ),*/
         centerTitle: true,
         title: Text(widget.friend.name),
-        actions: <Widget>[
-          IconButton(
-            icon: const Icon(Icons.settings),
-            tooltip: 'Show Snackbar',
-            onPressed: () {},
-          ),
-        ],
       ),
       body: Container(
         decoration: BoxDecoration(
@@ -72,17 +61,6 @@ class _FriendDetailsState extends State<FriendDetails> {
                   SizedBox(
                     height: 20,
                   ),
-                  /*Text(
-                    "", //widget.user.name,
-                    style: Theme.of(context)
-                        .textTheme
-                        .headline6
-                        .copyWith(color: Colors.white),
-                    textAlign: TextAlign.center,
-                  ),
-                  SizedBox(
-                    height: 20,
-                  ),*/
                   Text(
                     "Casa",
                     style: Theme.of(context)

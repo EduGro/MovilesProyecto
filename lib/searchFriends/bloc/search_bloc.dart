@@ -74,7 +74,9 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
                   profilePic: element["image"],
                   id: element.id,
                   casa: element["casa"],
-                  isAmigo: amigosList.contains(element.id) ? 0 : 1),
+                  isAmigo: amigosList.contains(element.id) ? 0 : 1,
+                  varita: element["varita"],
+                  patronus: element["patronus"]),
             )
             .toList();
         var amigos2 = await _cFirestore
@@ -92,7 +94,9 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
                   profilePic: element["image"],
                   id: element.id,
                   casa: element["casa"],
-                  isAmigo: amigosList.contains(element.id.toString()) ? 0 : 1),
+                  isAmigo: amigosList.contains(element.id.toString()) ? 0 : 1,
+                  varita: element["varita"],
+                  patronus: element["patronus"]),
             )
             .toList();
         list.addAll(list2.toList());
@@ -201,7 +205,9 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
                 profilePic: element["image"],
                 id: element.id,
                 casa: element["casa"],
-                isAmigo: 2),
+                isAmigo: 2,
+                varita: element["varita"],
+                patronus: element["patronus"]),
           );
         }
       }

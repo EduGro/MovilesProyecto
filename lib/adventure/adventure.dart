@@ -202,7 +202,7 @@ Container PutText(String text, BuildContext context, int score) {
                     Center(
                       child: Padding(
                         padding: const EdgeInsets.only(
-                            bottom: 300, left: 50, right: 50),
+                            bottom: 250, left: 50, right: 50),
                         child: Text(
                           text,
                           textAlign: TextAlign.center,

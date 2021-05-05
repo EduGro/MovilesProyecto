@@ -1,7 +1,11 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:proyectoMoviles/others/house/topics.dart';
 import 'package:proyectoMoviles/utils/constants.dart';
+
+import 'bloc/house_bloc.dart';
+
+final bloc = HouseBloc();
 
 class HousePage extends StatefulWidget {
   final String casa;
@@ -12,8 +16,9 @@ class HousePage extends StatefulWidget {
 }
 
 class _HousePageState extends State<HousePage> {
-  List<Map<String, dynamic>> topicsList;
+  var input = new TextEditingController();
   Color fondo;
+  bool search = false;
 
   @override
   Widget build(BuildContext context) {
@@ -33,110 +38,270 @@ class _HousePageState extends State<HousePage> {
           IconButton(
             icon: Icon(Icons.search),
             onPressed: () {
-              //TODO
+              setState(() {
+                search = !search;
+              });
             },
           ),
         ],
       ),
       backgroundColor: fondo,
-      body: FutureBuilder(
-          future: _getTopics(),
-          builder: (context, snapshot) {
-            if (snapshot.hasError) {
-              return Center(
-                child: Text("Algo salio mal",
-                    style: TextStyle(fontSize: 32, color: Colors.white)),
-              );
-            }
-            if (snapshot.connectionState == ConnectionState.done &&
-                snapshot.data.length == 0) {
-              return Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Center(
-                  child: Text("Aún no hay temas de conversación en esta casa",
-                      style: TextStyle(fontSize: 32, color: Colors.white)),
-                ),
-              );
-            }else if (snapshot.hasData) {
+      body: BlocProvider(
+        create: (context) => HouseBloc()
+          ..add(InitialEvent())
+          ..add(TopicsEvent(casa: widget.casa[0])),
+        child: BlocConsumer<HouseBloc, HouseState>(
+          listener: (context, state) {},
+          builder: (context, state) {
+            if (state is TopicsState) {
+              print(state.topicsList.length);
+              if (state.topicsList.length == 0) {
+                return Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    children: [
+                      Visibility(
+                        maintainAnimation: true,
+                        maintainState: true,
+                        visible: search,
+                        child: Card(
+                          color: Colors.white,
+                          child: SizedBox(
+                            height: 35.0,
+                            child: TextField(
+                              controller: input,
+                              decoration: InputDecoration(
+                                hintText: "Palabra a buscar",
+                                suffixIcon: IconButton(
+                                  onPressed: () {
+                                    BlocProvider.of<HouseBloc>(context).add(
+                                        SearchEvent(
+                                            casa: widget.casa[0],
+                                            keyword: input.text));
+                                  },
+                                  icon: Icon(Icons.search),
+                                ),
+                              ),
+                              onSubmitted: (content) {
+                                BlocProvider.of<HouseBloc>(context).add(
+                                    SearchEvent(
+                                        casa: widget.casa[0],
+                                        keyword: input.text));
+                              },
+                            ),
+                          ),
+                        ),
+                      ),
+                      Flexible(
+                        flex: 2,
+                        child: SizedBox(
+                          height: MediaQuery.of(context).size.height * 0.7,
+                          child: Center(
+                            child: Text(
+                                "Aún no hay temas de conversación en esta casa",
+                                style: TextStyle(
+                                    fontSize: 32, color: Colors.white)),
+                          ),
+                        ),
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Align(
+                            alignment: Alignment.bottomLeft,
+                            child: RaisedButton(
+                              onPressed: () {
+                                setState(() {
+                                  search = !search;
+                                });
+                                BlocProvider.of<HouseBloc>(context)
+                                    .add(TopicsEvent(casa: widget.casa[0]));
+                              },
+                              child: Text("Volver a ver todos los temas"),
+                              color: Colors.black,
+                              textColor: Colors.white,
+                              elevation: 5,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(20.0)),
+                            ),
+                          ),
+                          Align(
+                            alignment: Alignment.bottomRight,
+                            child: RaisedButton(
+                              onPressed: () {
+                                TextEditingController _title =
+                                    new TextEditingController();
+                                TextEditingController _desc =
+                                    new TextEditingController();
+                                showDialog(
+                                  context: context,
+                                  builder: (context2) => new AlertDialog(
+                                    title: Text('Agrega un nuevo tema'),
+                                    content: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        TextField(
+                                          decoration: InputDecoration(
+                                              hintText: "Título de tu tema"),
+                                          controller: _title,
+                                        ),
+                                        TextField(
+                                          decoration: InputDecoration(
+                                              hintText: "Contenido"),
+                                          controller: _desc,
+                                        ),
+                                      ],
+                                    ),
+                                    actions: <Widget>[
+                                      Center(
+                                        child: MaterialButton(
+                                          onPressed: () {
+                                            BlocProvider.of<HouseBloc>(context)
+                                                .add(AddTopicEvent(
+                                                    casa: widget.casa[0],
+                                                    title: _title.text,
+                                                    desc: _desc.text));
+                                            Navigator.of(context2).pop();
+                                          },
+                                          child: Text('Agregar'),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              },
+                              child: Icon(Icons.add),
+                              color: Colors.black,
+                              textColor: Colors.white,
+                              elevation: 5,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(20.0)),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                );
+              }
               return Padding(
                 padding: EdgeInsets.only(left: 10.0, right: 10.0),
-                child: ListView.builder(
-                  itemCount: topicsList.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    return topicItem(
-                      topic: topicsList[index],
-                      fondo: fondo,
-                    );
-                  },
+                child: Column(
+                  children: [
+                    Visibility(
+                      maintainAnimation: true,
+                      maintainState: true,
+                      visible: search,
+                      child: Card(
+                        color: Colors.white,
+                        child: SizedBox(
+                          height: 35.0,
+                          child: TextField(
+                            controller: input,
+                            decoration: InputDecoration(
+                              hintText: "Palabra a buscar",
+                              suffixIcon: IconButton(
+                                onPressed: () {
+                                  BlocProvider.of<HouseBloc>(context).add(
+                                      SearchEvent(
+                                          casa: widget.casa[0],
+                                          keyword: input.text));
+                                },
+                                icon: Icon(Icons.search),
+                              ),
+                            ),
+                            onSubmitted: (content) {
+                              BlocProvider.of<HouseBloc>(context).add(
+                                  SearchEvent(
+                                      casa: widget.casa[0],
+                                      keyword: input.text));
+                            },
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 5,
+                    ),
+                    Flexible(
+                      flex: 2,
+                      child: SizedBox(
+                        height: MediaQuery.of(context).size.height * 0.8,
+                        child: ListView.builder(
+                          itemCount: state.topicsList.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            return topicItem(
+                              topic: state.topicsList[index],
+                              fondo: fondo,
+                            );
+                          },
+                        ),
+                      ),
+                    ),
+                    Align(
+                      alignment: Alignment.bottomRight,
+                      child: RaisedButton(
+                        onPressed: () {
+                          TextEditingController _title =
+                              new TextEditingController();
+                          TextEditingController _desc =
+                              new TextEditingController();
+                          showDialog(
+                            context: context,
+                            builder: (context2) => new AlertDialog(
+                              title: Text('Agrega un nuevo tema'),
+                              content: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  TextField(
+                                    decoration: InputDecoration(
+                                        hintText: "Título de tu tema"),
+                                    controller: _title,
+                                  ),
+                                  TextField(
+                                    decoration:
+                                        InputDecoration(hintText: "Contenido"),
+                                    controller: _desc,
+                                  ),
+                                ],
+                              ),
+                              actions: <Widget>[
+                                Center(
+                                  child: MaterialButton(
+                                    onPressed: () {
+                                      BlocProvider.of<HouseBloc>(context).add(
+                                          AddTopicEvent(
+                                              casa: widget.casa[0],
+                                              title: _title.text,
+                                              desc: _desc.text));
+                                      Navigator.of(context2).pop();
+                                    },
+                                    child: Text('Agregar'),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          );
+                        },
+                        child: Icon(Icons.add),
+                        color: Colors.black,
+                        textColor: Colors.white,
+                        elevation: 5,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20.0)),
+                      ),
+                    ),
+                  ],
                 ),
               );
+            } else {
+              return Center(
+                child: CircularProgressIndicator(),
+              );
             }
-            return Center(
-              child: CircularProgressIndicator(),
-            );
-          }),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          TextEditingController _title = new TextEditingController();
-          TextEditingController _desc = new TextEditingController();
-          showDialog(
-            context: context,
-            builder: (context) => new AlertDialog(
-              title: Text('Agrega un nuevo tema'),
-              content: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  TextField(
-                    decoration: InputDecoration(hintText: "Título de tu tema"),
-                    controller: _title,
-                  ),
-                  TextField(
-                    decoration: InputDecoration(hintText: "Contenido"),
-                    controller: _desc,
-                  ),
-                ],
-              ),
-              actions: <Widget>[
-                Center(
-                  child: MaterialButton(
-                    onPressed: () async {
-                      try {
-                        await FirebaseFirestore.instance
-                            .collection('forums')
-                            .add({
-                          "casa": widget.casa[0],
-                          "title": _title.text,
-                          "description": _desc.text,
-                          "respuestas": [],
-                        });
-                      } catch (e) {
-                        throw e;
-                      }
-                      await _getTopics();
-                      setState(() {});
-                      Navigator.of(context).pop();
-                    },
-                    child: Text('Agregar'),
-                  ),
-                ),
-              ],
-            ),
-          );
-        },
-        child: const Icon(Icons.add),
-        backgroundColor: Colors.black,
+          },
+        ),
       ),
     );
-  }
-
-  Future<List<Map<String, dynamic>>> _getTopics() async {
-    List<QueryDocumentSnapshot> documentList;
-    documentList = await FirebaseFirestore.instance
-        .collection('forums')
-        .where('casa', isEqualTo: widget.casa[0])
-        .get()
-        .then((value) => value.docs);
-
-    return topicsList = documentList.map((e) => e.data()).toList();
   }
 }

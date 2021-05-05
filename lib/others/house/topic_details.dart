@@ -1,15 +1,17 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:proyectoMoviles/others/house/house_page.dart';
 
 class TopicDetailsPage extends StatefulWidget {
-  final String title, desc;
+  final String title, desc, doc_id;
   final Color fondo;
   TopicDetailsPage(
       {Key key,
       @required this.title,
       @required this.desc,
-      @required this.fondo})
+      @required this.fondo,
+      @required this.doc_id})
       : super(key: key);
 
   @override
@@ -20,6 +22,7 @@ class TopicDetailsPageState extends State<TopicDetailsPage> {
   List<dynamic> repliesList;
   TextEditingController replyCont = new TextEditingController();
   var _scaffoldKey = GlobalKey<ScaffoldState>();
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -134,15 +137,9 @@ class TopicDetailsPageState extends State<TopicDetailsPage> {
                           icon: Icon(Icons.send),
                           onPressed: () async {
                             try {
-                              List<QueryDocumentSnapshot> documentList;
-                              documentList = await FirebaseFirestore.instance
-                                  .collection('forums')
-                                  .where("title", isEqualTo: widget.title)
-                                  .get()
-                                  .then((value) => value.docs);
                               await FirebaseFirestore.instance
                                   .collection('forums')
-                                  .doc(documentList.first.id)
+                                  .doc(widget.doc_id)
                                   .update({
                                 "respuestas": FieldValue.arrayUnion(
                                     [replyCont.text as dynamic])
@@ -168,13 +165,12 @@ class TopicDetailsPageState extends State<TopicDetailsPage> {
   }
 
   Future<List<dynamic>> _getAnswers() async {
-    List<QueryDocumentSnapshot> documentList;
-    documentList = await FirebaseFirestore.instance
+    List<dynamic> replies = await FirebaseFirestore.instance
         .collection('forums')
-        .where('title', isEqualTo: widget.title)
+        .doc(widget.doc_id)
         .get()
-        .then((value) => value.docs);
+        .then((value) => value.data()['respuestas']);
 
-    return repliesList = documentList.first.data()['respuestas'];
+    return repliesList = replies;
   }
 }

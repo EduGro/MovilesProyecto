@@ -172,27 +172,6 @@ class _IngresoState extends State<Ingreso> {
                           ),
                         ),
                         Container(
-                          padding: new EdgeInsets.only(top: 20.0),
-                          child: new RichText(
-                            textAlign: TextAlign.center,
-                            text: new TextSpan(
-                              children: [
-                                new TextSpan(
-                                  text: '¿Olvidaste tu contraseña?',
-                                  style: new TextStyle(
-                                    color: Colors.white,
-                                  ),
-                                  recognizer: new TapGestureRecognizer()
-                                    ..onTap = () {
-                                      showSnacks(
-                                          "Enviar un email por favor a: esteCorreo@no.existe");
-                                    },
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        Container(
                           padding: new EdgeInsets.only(top: 30.0),
                           child: new RichText(
                             textAlign: TextAlign.center,

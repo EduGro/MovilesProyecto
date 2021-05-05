@@ -109,7 +109,8 @@ class RegistroBloc extends Bloc<RegistroEvent, RegistroState> {
       'image': image,
       'casa': casa,
       'patronus': patronus,
-      'varita': varita
+      'varita': varita,
+      'amigos': []
     };
     try {
       await _collFirestore.collection("users").add(user);

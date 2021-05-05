@@ -31,7 +31,7 @@ class _getFriendsState extends State<getFriends> {
             Padding(
               padding: const EdgeInsets.only(top: 10),
               child: FutureBuilder(
-                future: SearchBloc().addedFriends(widget.user["amigos"]),
+                future: SearchBloc().addedFriends(widget.user["email"]),
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
                     return ListView.builder(

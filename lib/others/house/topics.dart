@@ -15,7 +15,6 @@ class _topicItemState extends State<topicItem> {
   @override
   Widget build(BuildContext context) {
     var topic = widget.topic;
-    print(widget.topic['id']);
     return Padding(
       padding: EdgeInsets.only(bottom: 10.0, top: 10.0),
       child: Container(
@@ -50,7 +49,7 @@ class _topicItemState extends State<topicItem> {
                 Padding(
                   padding: EdgeInsets.only(top: 10.0),
                   child: Text(
-                    "${topic['description']}", //TODO .substring(0, 50) checar longitud de desc
+                    "${topic['description'].length > 50 ? topic['description'].substring(0, 50): topic['description']}",
                     style: TextStyle(
                       fontSize: 18,
                     ),

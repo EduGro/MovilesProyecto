@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:proyectoMoviles/home/profile.dart';
 
 class Home extends StatefulWidget {
   final String userEmail;

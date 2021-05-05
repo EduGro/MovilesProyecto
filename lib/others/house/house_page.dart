@@ -19,6 +19,7 @@ class _HousePageState extends State<HousePage> {
   var input = new TextEditingController();
   Color fondo;
   bool search = false;
+  bool themes = false;
 
   @override
   Widget build(BuildContext context) {
@@ -51,10 +52,15 @@ class _HousePageState extends State<HousePage> {
           ..add(InitialEvent())
           ..add(TopicsEvent(casa: widget.casa[0])),
         child: BlocConsumer<HouseBloc, HouseState>(
-          listener: (context, state) {},
+          listener: (context, state) {
+            if (state is HouseInitial) {
+              print(themes);
+              themes = false;
+            }
+          },
           builder: (context, state) {
+            print(state);
             if (state is TopicsState) {
-              print(state.topicsList.length);
               if (state.topicsList.length == 0) {
                 return Padding(
                   padding: const EdgeInsets.all(16.0),
@@ -78,6 +84,9 @@ class _HousePageState extends State<HousePage> {
                                         SearchEvent(
                                             casa: widget.casa[0],
                                             keyword: input.text));
+                                    setState(() {
+                                      themes = true;
+                                    });
                                   },
                                   icon: Icon(Icons.search),
                                 ),
@@ -87,6 +96,9 @@ class _HousePageState extends State<HousePage> {
                                     SearchEvent(
                                         casa: widget.casa[0],
                                         keyword: input.text));
+                                setState(() {
+                                  themes = true;
+                                });
                               },
                             ),
                           ),
@@ -105,24 +117,29 @@ class _HousePageState extends State<HousePage> {
                         ),
                       ),
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        mainAxisAlignment: MainAxisAlignment.end,
                         children: [
-                          Align(
-                            alignment: Alignment.bottomLeft,
-                            child: RaisedButton(
-                              onPressed: () {
-                                setState(() {
-                                  search = !search;
-                                });
-                                BlocProvider.of<HouseBloc>(context)
-                                    .add(TopicsEvent(casa: widget.casa[0]));
-                              },
-                              child: Text("Volver a ver todos los temas"),
-                              color: Colors.black,
-                              textColor: Colors.white,
-                              elevation: 5,
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(20.0)),
+                          Visibility(
+                            maintainAnimation: true,
+                            maintainState: true,
+                            visible: themes,
+                            child: Align(
+                              alignment: Alignment.bottomLeft,
+                              child: RaisedButton(
+                                onPressed: () {
+                                  setState(() {
+                                    search = !search;
+                                  });
+                                  BlocProvider.of<HouseBloc>(context)
+                                      .add(TopicsEvent(casa: widget.casa[0]));
+                                },
+                                child: Text("Volver a ver todos los temas"),
+                                color: Colors.black,
+                                textColor: Colors.white,
+                                elevation: 5,
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(20.0)),
+                              ),
                             ),
                           ),
                           Align(
@@ -206,6 +223,9 @@ class _HousePageState extends State<HousePage> {
                                       SearchEvent(
                                           casa: widget.casa[0],
                                           keyword: input.text));
+                                  setState(() {
+                                    themes = true;
+                                  });
                                 },
                                 icon: Icon(Icons.search),
                               ),
@@ -215,6 +235,9 @@ class _HousePageState extends State<HousePage> {
                                   SearchEvent(
                                       casa: widget.casa[0],
                                       keyword: input.text));
+                              setState(() {
+                                themes = true;
+                              });
                             },
                           ),
                         ),
@@ -238,58 +261,89 @@ class _HousePageState extends State<HousePage> {
                         ),
                       ),
                     ),
-                    Align(
-                      alignment: Alignment.bottomRight,
-                      child: RaisedButton(
-                        onPressed: () {
-                          TextEditingController _title =
-                              new TextEditingController();
-                          TextEditingController _desc =
-                              new TextEditingController();
-                          showDialog(
-                            context: context,
-                            builder: (context2) => new AlertDialog(
-                              title: Text('Agrega un nuevo tema'),
-                              content: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  TextField(
-                                    decoration: InputDecoration(
-                                        hintText: "Título de tu tema"),
-                                    controller: _title,
-                                  ),
-                                  TextField(
-                                    decoration:
-                                        InputDecoration(hintText: "Contenido"),
-                                    controller: _desc,
-                                  ),
-                                ],
-                              ),
-                              actions: <Widget>[
-                                Center(
-                                  child: MaterialButton(
-                                    onPressed: () {
-                                      BlocProvider.of<HouseBloc>(context).add(
-                                          AddTopicEvent(
-                                              casa: widget.casa[0],
-                                              title: _title.text,
-                                              desc: _desc.text));
-                                      Navigator.of(context2).pop();
-                                    },
-                                    child: Text('Agregar'),
-                                  ),
-                                ),
-                              ],
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Visibility(
+                          maintainAnimation: true,
+                          maintainState: true,
+                          visible: themes,
+                          child: Align(
+                            alignment: Alignment.bottomLeft,
+                            child: RaisedButton(
+                              onPressed: () {
+                                setState(() {
+                                  search = !search;
+                                });
+                                setState(() {
+                                  themes = false;
+                                });
+                                BlocProvider.of<HouseBloc>(context)
+                                    .add(TopicsEvent(casa: widget.casa[0]));
+                              },
+                              child: Text("Volver a ver todos los temas"),
+                              color: Colors.black,
+                              textColor: Colors.white,
+                              elevation: 5,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(20.0)),
                             ),
-                          );
-                        },
-                        child: Icon(Icons.add),
-                        color: Colors.black,
-                        textColor: Colors.white,
-                        elevation: 5,
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20.0)),
-                      ),
+                          ),
+                        ),
+                        Align(
+                          alignment: Alignment.bottomRight,
+                          child: RaisedButton(
+                            onPressed: () {
+                              TextEditingController _title =
+                                  new TextEditingController();
+                              TextEditingController _desc =
+                                  new TextEditingController();
+                              showDialog(
+                                context: context,
+                                builder: (context2) => new AlertDialog(
+                                  title: Text('Agrega un nuevo tema'),
+                                  content: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      TextField(
+                                        decoration: InputDecoration(
+                                            hintText: "Título de tu tema"),
+                                        controller: _title,
+                                      ),
+                                      TextField(
+                                        decoration: InputDecoration(
+                                            hintText: "Contenido"),
+                                        controller: _desc,
+                                      ),
+                                    ],
+                                  ),
+                                  actions: <Widget>[
+                                    Center(
+                                      child: MaterialButton(
+                                        onPressed: () {
+                                          BlocProvider.of<HouseBloc>(context)
+                                              .add(AddTopicEvent(
+                                                  casa: widget.casa[0],
+                                                  title: _title.text,
+                                                  desc: _desc.text));
+                                          Navigator.of(context2).pop();
+                                        },
+                                        child: Text('Agregar'),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            },
+                            child: Icon(Icons.add),
+                            color: Colors.black,
+                            textColor: Colors.white,
+                            elevation: 5,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(20.0)),
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 ),

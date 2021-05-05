@@ -90,12 +90,14 @@ class HouseBloc extends Bloc<HouseEvent, HouseState> {
     }
 
     for (var i in documentList2) {
-      topicsList.add({
-        "title": i.data()['title'],
-        "description": i.data()['description'],
-        "respuestas": i.data()['respuestas'],
-        "id": i.id
-      });
+      if (topicsList.where((element) => element['id']==i.id).isEmpty) {
+        topicsList.add({
+          "title": i.data()['title'],
+          "description": i.data()['description'],
+          "respuestas": i.data()['respuestas'],
+          "id": i.id
+        });
+      }
     }
   }
 }

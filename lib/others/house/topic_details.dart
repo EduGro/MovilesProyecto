@@ -22,12 +22,24 @@ class TopicDetailsPageState extends State<TopicDetailsPage> {
   List<dynamic> repliesList;
   TextEditingController replyCont = new TextEditingController();
   var _scaffoldKey = GlobalKey<ScaffoldState>();
-  
+  String descripcion;
+
   @override
   Widget build(BuildContext context) {
+    if (widget.desc == null) {
+      descripcion = '';
+    } else {
+      descripcion = widget.desc;
+    }
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
         title: Text("Respuestas al tema"),
       ),
       backgroundColor: widget.fondo,
@@ -65,11 +77,15 @@ class TopicDetailsPageState extends State<TopicDetailsPage> {
                         children: [
                           Padding(
                             padding: const EdgeInsets.all(8.0),
-                            child: Text(
-                              "${widget.desc == null ? '' : widget.desc}",
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 20.0,
+                            child: Container(
+                              padding: EdgeInsets.only(top: 8.0, left: 8.0),
+                              width: 300,
+                              child: Text(
+                                "${descripcion}",
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 20.0,
+                                ),
                               ),
                             ),
                           ),

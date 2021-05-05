@@ -156,7 +156,6 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
               ),
             )
             .toList();
-
         if (list[0].amigos.contains(toPass)) return true;
         list[0].amigos.add(toPass);
         var unique2 = await _cFirestore
@@ -177,7 +176,7 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
         var unique2 = await _cFirestore
             .collection('users')
             .doc(list[0].id)
-            .update({'amigos': list2});
+            .update({'amigos': FieldValue.arrayUnion(list2)});
         return true;
       }
     } catch (e) {
@@ -186,30 +185,36 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
     }
   }
 
-  Future<List<itemFriends>> addedFriends(amigosArray) async {
+  Future<List<itemFriends>> addedFriends(email) async {
+    List<QueryDocumentSnapshot> documentList;
+    documentList = await FirebaseFirestore.instance
+        .collection('users')
+        .where("email", isEqualTo: email)
+        .limit(1)
+        .get()
+        .then((value) => value.docs);
+    var amigosArray = documentList.first.get("amigos");
     try {
       int i;
       List<itemFriends> friendsList = [];
-      if (amigosArray != null) {
-        for (i = 0; i < amigosArray.length; i++) {
-          //substring due to "DocumentReference(users/[thingWeNeed])"
-          var temp = amigosArray[i].toString().substring(
-                24,
-                (amigosArray[i].toString().length - 1),
-              );
-          DocumentSnapshot element =
-              await _cFirestore.collection('users').doc(temp).get();
-          friendsList.add(
-            itemFriends(
-                name: element["name"],
-                profilePic: element["image"],
-                id: element.id,
-                casa: element["casa"],
-                isAmigo: 2,
-                varita: element["varita"],
-                patronus: element["patronus"]),
-          );
-        }
+      for (i = 0; i < amigosArray.length; i++) {
+        //substring due to "DocumentReference(users/[thingWeNeed])"
+        var temp = amigosArray[i].toString().substring(
+              24,
+              (amigosArray[i].toString().length - 1),
+            );
+        DocumentSnapshot element =
+            await _cFirestore.collection('users').doc(temp).get();
+        friendsList.add(
+          itemFriends(
+              name: element["name"],
+              profilePic: element["image"],
+              id: element.id,
+              casa: element["casa"],
+              isAmigo: 2,
+              varita: element["varita"],
+              patronus: element["patronus"]),
+        );
       }
       return friendsList;
     } catch (e) {
